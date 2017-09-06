@@ -1,0 +1,49 @@
+{
+  "name": "artoratoire",
+  "version": "0.0.1",
+  "description": "artoratoire project",
+  "main": "index.js",
+  "scripts": {
+    "dev": "kotatsu serve --config ./webpack.config.js --progress --babel --public ./ ./src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/medialab/artoratoire.git"
+  },
+  "author": "Mengying Du",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/medialab/artoratoire/issues"
+  },
+  "homepage": "https://github.com/medialab/artoratoire#readme",
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.7",
+    "kotatsu": "^0.15.2",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2"
+  },
+  "babel": {
+    "plugins": [
+      "transform-object-rest-spread",
+      "transform-class-properties"
+    ],
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  }
+}
