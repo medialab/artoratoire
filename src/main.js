@@ -6,12 +6,12 @@ const mountNode = document.getElementById('app');
 
 render(<App />, mountNode);
 
-// Are we in development mode?
+// Hot reload
 if (module.hot) {
   // Whenever a new version of App.js is available
-  module.hot.accept('./App', function () {
+  module.hot.accept("./App", () => {
     // Require the new version and render it instead
-    NextApp = require('./App').default;
+    const NextApp = require('./App').default;
     render(<NextApp />, mountNode);
   });
 }
