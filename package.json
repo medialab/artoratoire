@@ -19,12 +19,19 @@
   },
   "homepage": "https://github.com/medialab/artoratoire#readme",
   "dependencies": {
+    "axios": "^0.16.2",
+    "normalize.css": "^7.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
-    "redux": "^3.7.2"
+    "react-select": "^1.0.0-rc.8",
+    "redux": "^3.7.2",
+    "redux-i18n": "^1.5.4",
+    "redux-thunk": "^2.2.0",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "@yomguithereal/eslint-config": "^4.0.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -51,6 +58,10 @@
   },
   "eslintConfig": {
     "parser": "babel-eslint",
+    "extends": [
+      "@yomguithereal/eslint-config/es6",
+      "@yomguithereal/eslint-config/react"
+    ],
     "rules": {}
   }
 }

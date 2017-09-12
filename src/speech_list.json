@@ -1,0 +1,93 @@
+[
+  {
+    "label": "Présidents",
+    "value": "president",
+    "list": [
+      {
+        "label": "Charles de Gaulle",
+        "file_name": "de Gaulle"
+      },
+      {
+        "label": "Georges Pompidou",
+        "file_name": "Pompidou"
+      },
+      {
+        "label": "François Mitterrand",
+        "file_name": "Mitterrand"
+      },
+      {
+        "label": "Jacques Chirac",
+        "file_name": "Chirac"
+      },
+      {
+        "label": "Nicolas Sarkozy",
+        "file_name": "Sarkozy"
+      },
+      {
+        "label": "François Hollande",
+        "file_name": "Hollande"
+      }
+    ]
+  },
+  { 
+    "label": "Christiane Taubira",
+    "value": "christiane",
+    "list": [
+      {
+        "label": "Réponse à E. Cioti",
+        "file_name": "Cioti"
+      },
+      {
+        "label": "Jacques Chirac",
+        "file_name": "Chirac"
+      },
+      {
+        "label": "Défense Mariage pour tous",
+        "file_name": "VoteMariage"
+      },
+      {
+        "label": "Tirade",
+        "file_name": "Misogynie"
+      }
+    ]
+  },
+  {  
+    "label": "President Obama",
+    "value": "president_obama",
+    "list": [
+      {
+        "label": "Climate",
+        "file_name": "ObamaClimate"
+      },
+      {
+        "label": "Democracy",
+        "file_name": "ObamaDemocracy"
+      },
+      {
+        "label": "Union",
+        "file_name": "Obama-Intro Union"
+      },
+      {
+        "label": "Regrets",
+        "file_name": "ObamaRegrets"
+      }
+    ]
+  },
+  { "label": "Divers",
+    "value": "divers",
+    "list": [
+      {
+        "label": "Jean-Luc Mélenchon",
+        "file_name": "Melenchon"
+      },
+      {
+        "label": "Bernard Cazeneuve",
+        "file_name": "Cazeneuve"
+      },
+      {
+        "label": "François Mitterand - discours Europe 1995",
+        "file_name": "MitterandEurope"
+      }
+    ]
+  }
+]
