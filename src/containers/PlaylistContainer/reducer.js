@@ -1,26 +1,23 @@
-import {SELECT_CATEGORY, SELECT_SPEECH, GET_SPEECH_TEXT} from './actions';
+import {SELECT_CATEGORY, SELECT_SPEECH} from './actions';
 
 const initialPlaylistState = {
   selectedCategory: {},
-  selectedSpeech: '',
-  speechText: ''
+  selectedSpeech: {}
 };
 
 // Reducer
 export default function playlist(state = initialPlaylistState, action) {
   switch (action.type) {
     case SELECT_CATEGORY:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         selectedCategory: action.category
-      });
+      };
     case SELECT_SPEECH:
-      return Object.assign({}, state, {
-        selectedSpeech: action.text
-      });
-    case GET_SPEECH_TEXT:
-      return Object.assign({}, state, {
-        speechText: action.text
-      });
+      return {
+        ...state,
+        selectedSpeech: action.speech
+      };
     default:
       return state;
   }

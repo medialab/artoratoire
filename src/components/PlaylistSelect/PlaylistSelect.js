@@ -12,15 +12,14 @@ const PlaylistSelect = ({
   placeholder,
   onChange
 }) => {
-  const onSelectChange = (e) => {
-    if (e) onChange(e);
-  };
-
+  const onSelectChange = (e) => onChange(e);
   return (
     <div className="aort-PlaylistSelect">
       <Select
         name="form-field-name"
         value={selectedOption}
+        openOnFocus
+        clearable={false}
         options={options}
         placeholder={placeholder}
         onChange={onSelectChange} />

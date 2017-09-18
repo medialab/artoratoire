@@ -1,0 +1,14 @@
+@import '../../../styles/variables';
+
+.aort-SpeechContent {
+  p {
+    white-space: pre-line;
+  }
+  a {
+    border-bottom: 1px dashed;
+    // &:hover {
+    //   border-bottom: 1px dashed;
+    // }
+  }
+
+}

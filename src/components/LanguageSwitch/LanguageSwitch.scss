@@ -1,9 +1,7 @@
+@import '../../../styles/variables';
+
 .aort-LanguageSwitch {
-  button {
-    border: none;
-    outline: none;
-  }
   .active {
-    font-weight: 800;
+    font-weight: $weight-bold;
   }
 }

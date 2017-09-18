@@ -1,0 +1,37 @@
+/**
+ *
+ * customzie bulma variables
+ *
+ */
+
+// Import the initial variables
+@import "~bulma/sass/utilities/initial-variables";
+
+// own initial variables
+$blue: #51aae8;
+$family-serif: "Libre Baskerville";
+
+// derived variables
+$primary: $blue;
+
+// New variables
+$family-primary: $family-serif;
+$text: $black;
+$content-blockquote-background-color: $white;
+$content-blockquote-border-left: 5px solid;
+$active-background: $white-ter;
+
+// Import the rest of Bulma
+@import "~bulma";
+
+/**
+ * customize react-select
+ */
+$select-input-border-radius: 0px !default;
+$select-item-border-radius: 0px !default;
+$select-option-focused-bg: $active-background !default;
+$select-option-selected-bg: $active-background !default;
+$select-input-border-focus: $primary !default;
+$select-input-box-shadow-focus: none;
+
+@import '~react-select/scss/default.scss';

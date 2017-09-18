@@ -6,6 +6,8 @@ import I18n from 'redux-i18n';
 import App from './containers/App/App';
 import configureStore from './store/configureStore';
 
+import 'normalize.css';
+import '../styles/main.scss';
 import translations from './translations';
 
 const mountNode = document.getElementById('app');

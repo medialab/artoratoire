@@ -15,7 +15,7 @@ const LanguageSwitch = ({lang, setLanguage}) => {
   };
   return (
     <div className="aort-LanguageSwitch">
-      <button onClick={onClick}>
+      <button className="button is-white" onClick={onClick}>
         <span className={lang === 'en' ? 'active' : ''}>en</span>/<span className={lang === 'fr' ? 'active' : ''}>fr</span>
       </button>
     </div>
