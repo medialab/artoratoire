@@ -6,25 +6,29 @@ import {setLanguage} from 'redux-i18n';
 import './App.scss';
 import Header from '../../components/Header/Header';
 import PlaylistContainer from '../PlaylistContainer/PlaylistContainer';
+import RecorderContainer from '../RecorderContainer/RecorderContainer';
 
 const App = ({
   lang,
   actions
-}) => (
-  <div className="aort-App">
-    <Header lang={lang} setLanguage={actions.setLanguage} />
-    <div className="content is-medium">
-      <section>
-        <PlaylistContainer />
-      </section>
-      <section>
-        <div className="container">
-          <hr />
-        </div>
-      </section>
+}) => {
+  return (
+    <div className="aort-App">
+      <Header lang={lang} setLanguage={actions.setLanguage} />
+      <div className="content">
+        <section>
+          <PlaylistContainer />
+        </section>
+        <section>
+          <div className="container">
+            <RecorderContainer />
+          </div>
+        </section>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
 
 export default connect(
   state => ({

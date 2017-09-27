@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import getExtractedContent from '../../utils/textExtractor';
+import textExtractor from '../../utils/textExtractor';
 import './SpeechContent.scss';
 
 const SpeechContent = ({text, selectedFile}) => {
-  const content = text ? getExtractedContent(text) : null;
+  const content = text ? textExtractor(text) : null;
   return (
     <div className="aort-SpeechContent">
       {content ?
         <blockquote>
-          <audio controls src={'../../speech_material/' + selectedFile + '.mp3'}>
+          <audio className="selectedAudio" controls src={'../../speech_material/' + selectedFile + '.mp3'}>
             Your browser does not support the audio element.
           </audio>
           <p><em>{content.content}</em></p>
