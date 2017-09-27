@@ -2,5 +2,6 @@
   "instruction": "Instruction",
   "step-one": "Première étape",
   "step-two": "Deuxième étape",
-  "select-playlist": "Sélectionnez une playlist ..."
+  "select-playlist": "Sélectionnez une playlist ...",
+  "subtitle": "(need french)"
 }

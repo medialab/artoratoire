@@ -1,4 +1,4 @@
-export default function getExtractedContent(text) {
+export default function textExtractor(text) {
   const sourceString = text.match(/<small>(.*?)<\/small>/g)[0] || '';
   const sourceArray = sourceString.replace(/<\/?small>/g, '').split('<BR>');
   const contentText = text.replace(/<i>(.*?)<\/i>/g, '')

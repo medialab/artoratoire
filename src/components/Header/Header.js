@@ -27,12 +27,13 @@ class Header extends Component {
   }
 
   render() {
+    const translate = this.context.t;
     return (
       <div className={'aort-Header ' + (this.state.scrollTop > 200 ? 'smaller' : '')}>
         <div className="columns is-centered">
           <div className="column is-half has-text-centered">
             <p className="title is-2">Artoratoire</p>
-            <p className="subtitle is-4">How to give a better speech?</p>
+            <p className="subtitle is-4">{translate('subtitle')}</p>
             <LanguageSwitch lang={this.props.lang} setLanguage={this.props.setLanguage} />
           </div>
         </div>
