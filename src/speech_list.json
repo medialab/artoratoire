@@ -5,71 +5,85 @@
     "list": [
       {
         "label": "Charles de Gaulle",
-        "file_name": "de Gaulle"
+        "file_name": "de Gaulle",
+        "lang": "fr"
       },
       {
         "label": "Georges Pompidou",
-        "file_name": "Pompidou"
+        "file_name": "Pompidou",
+        "lang": "fr"
       },
       {
         "label": "François Mitterrand",
-        "file_name": "Mitterrand"
+        "file_name": "Mitterrand",
+        "lang": "fr"
       },
       {
         "label": "Jacques Chirac",
-        "file_name": "Chirac"
+        "file_name": "Chirac",
+        "lang": "fr"
       },
       {
         "label": "Nicolas Sarkozy",
-        "file_name": "Sarkozy"
+        "file_name": "Sarkozy",
+        "lang": "fr"
       },
       {
         "label": "François Hollande",
-        "file_name": "Hollande"
+        "file_name": "Hollande",
+        "lang": "fr"
       }
     ]
   },
-  { 
+  {
     "label": "Christiane Taubira",
     "value": "christiane",
     "list": [
       {
         "label": "Réponse à E. Cioti",
-        "file_name": "Cioti"
+        "file_name": "Cioti",
+        "lang": "fr"
       },
       {
         "label": "Jacques Chirac",
-        "file_name": "Chirac"
+        "file_name": "Chirac",
+        "lang": "fr"
       },
       {
         "label": "Défense Mariage pour tous",
-        "file_name": "VoteMariage"
+        "file_name": "VoteMariage",
+        "lang": "fr"
       },
       {
         "label": "Tirade",
-        "file_name": "Misogynie"
+        "file_name": "Misogynie",
+        "lang": "fr"
       }
     ]
   },
-  {  
+  {
     "label": "President Obama",
     "value": "president_obama",
     "list": [
       {
         "label": "Climate",
-        "file_name": "ObamaClimate"
+        "file_name": "ObamaClimate",
+        "lang": "en"
       },
       {
         "label": "Democracy",
-        "file_name": "ObamaDemocracy"
+        "file_name": "ObamaDemocracy",
+        "lang": "en"
       },
       {
         "label": "Union",
-        "file_name": "Obama-Intro Union"
+        "file_name": "Obama-Intro Union",
+        "lang": "en"
       },
       {
         "label": "Regrets",
-        "file_name": "ObamaRegrets"
+        "file_name": "ObamaRegrets",
+        "lang": "en"
       }
     ]
   },
@@ -78,15 +92,18 @@
     "list": [
       {
         "label": "Jean-Luc Mélenchon",
-        "file_name": "Melenchon"
+        "file_name": "Melenchon",
+        "lang": "fr"
       },
       {
         "label": "Bernard Cazeneuve",
-        "file_name": "Cazeneuve"
+        "file_name": "Cazeneuve",
+        "lang": "fr"
       },
       {
         "label": "François Mitterand - discours Europe 1995",
-        "file_name": "MitterandEurope"
+        "file_name": "MitterandEurope",
+        "lang": "fr"
       }
     ]
   }

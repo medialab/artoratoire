@@ -6,7 +6,7 @@ module.exports = {
         use: 'file-loader'
       },
       {
-        test: /\.csv$/,
+        test: /\.(csv|txt)$/,
         use: 'raw-loader'
       },
       {

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import textExtractor from '../../utils/textExtractor';
 
 // Actions
 
@@ -12,9 +13,10 @@ export const selectSpeech = speech => {
   return dispatch => {
     axios.get('../../speech_material/' + speech.file_name + '.txt')
     .then(res => {
+      const content = textExtractor(res.data, speech.lang);
       speech = {
         ...speech,
-        content: res.data
+        ...content
       };
       dispatch({type: SELECT_SPEECH, speech});
     });

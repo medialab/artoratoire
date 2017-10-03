@@ -43,7 +43,7 @@ const PlaylistContainer = ({
         <div className="column">
           {
             selectedSpeech ?
-              <SpeechContent text={selectedSpeech.content} selectedFile={selectedSpeech.file_name} /> : null
+              <SpeechContent speech={selectedSpeech} /> : null
           }
         </div>
       </div>
