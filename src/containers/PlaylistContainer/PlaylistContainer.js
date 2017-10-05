@@ -10,6 +10,7 @@ import speechList from '../../speech_list.json';
 import PlaylistSelect from '../../components/PlaylistSelect/PlaylistSelect';
 import PlaylistItems from '../../components/PlaylistItems/PlaylistItems';
 import SpeechContent from '../../components/SpeechContent/SpeechContent';
+import SpeechSummary from '../../components/SpeechSummary/SpeechSummary';
 
 
 const PlaylistContainer = ({
@@ -42,10 +43,17 @@ const PlaylistContainer = ({
         </div>
         <div className="column">
           {
-            selectedSpeech ?
+            selectedSpeech.content ?
               <SpeechContent speech={selectedSpeech} /> : null
           }
         </div>
+      </div>
+      <div>
+        {
+          selectedSpeech.content ?
+            <SpeechSummary speech={selectedSpeech} /> : null
+
+        }
       </div>
     </div>
   );

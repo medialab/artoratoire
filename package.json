@@ -22,6 +22,7 @@
     "axios": "^0.16.2",
     "bulma": "^0.5.2",
     "font-awesome": "^4.7.0",
+    "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",
     "phonogram": "^0.2.0",
     "react": "^15.6.1",
@@ -32,7 +33,8 @@
     "redux-i18n": "^1.5.4",
     "redux-thunk": "^2.2.0",
     "talisman": "^0.20.0",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "wavesurfer.js": "^2.0.0-beta01"
   },
   "devDependencies": {
     "@yomguithereal/eslint-config": "^4.0.0",
