@@ -4,8 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import './RecorderContainer.scss';
-import AudioVisualizer from '../../components/AudioVisualizer/AudioVisualizer';
-
+import StreamingWave from '../../components/StreamingWave/StreamingWave';
 import {saveRecording, getRecordings, clearRecordings} from './actions';
 import {dataURLtoBlob} from '../../utils/blobConverter';
 
@@ -19,6 +18,7 @@ class RecorderContainer extends Component {
       audioElement: null
     };
   }
+
   componentDidMount() {
     this.props.actions.getRecordings();
   }
@@ -27,7 +27,7 @@ class RecorderContainer extends Component {
     this.setState({
       isRecording: true
     });
-  };
+  }
 
   stopRecording = () => {
     this.setState({
@@ -43,9 +43,6 @@ class RecorderContainer extends Component {
   }
 
   onStop = (blobObject) => {
-    // this.setState({
-    //   blobURL : blobObject.blobURL
-    // });
     const recordingsCount = this.props.recordings.list.filter((item) => {
       return item.refSpeech === this.props.selectedSpeech.file_name;
     }).length;
@@ -54,34 +51,28 @@ class RecorderContainer extends Component {
     if (this.state.saveRecording) {
       this.props.actions.saveRecording(blobObject, recordingsCount);
     }
-  };
+  }
 
   render() {
     return (
       this.props.selectedSpeech.file_name ?
         <div className="arot-RecorderContainer">
-        {/*<div className="tabs is-fullwidth">
-            <ul>
-              <li className="is-active"><a>Record</a></li>
-              <li><a>Compare</a></li>
-            </ul>
-          </div>*/}
           <div>
-            <AudioVisualizer
+            <StreamingWave
               className="oscilloscope"
-              record={this.state.isRecording}
+              isRecording={this.state.isRecording}
               backgroundColor="#eee"
-              visualSetting="frequencyBars"
               audioBitsPerSecond={128000}
               onStop={this.onStop}
               strokeColor="#000000" />
+          </div>
+          <div>
             <div>
               <button className="button" onClick={this.startRecording}>start</button>
               <button className="button" onClick={this.saveRecording}>stop/save</button>
               <button className="button" onClick={this.props.actions.clearRecordings}>clear</button>
             </div>
             <audio controls="controls" src={this.state.blobURL}></audio>
-
           </div>
           <ul className="aort-RecordingsItem">
             {
@@ -104,16 +95,6 @@ class RecorderContainer extends Component {
               })
             }
           </ul>
-          {/*<div>
-            <AudioVisualizer
-              className="oscilloscope"
-              record={this.state.record}
-              backgroundColor="#eee"
-              visualSetting="sinewave"
-              audioElem={document.querySelector('.selectedAudio')}
-              audioBitsPerSecond={128000}
-              strokeColor="#000000" />
-          </div>*/}
         </div> : null
     );
   }
