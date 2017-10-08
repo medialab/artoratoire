@@ -5,7 +5,9 @@ import {connect} from 'react-redux';
 
 import './RecorderContainer.scss';
 import StreamingWave from '../../components/StreamingWave/StreamingWave';
-import {saveTrial} from '../TrialsContainer/actions';
+import {saveTrial, selectTrial} from '../TrialsContainer/actions';
+import {blobToBuffer} from '../../utils/blobConverter';
+
 
 class RecorderContainer extends Component {
   constructor(props) {
@@ -37,13 +39,25 @@ class RecorderContainer extends Component {
   }
 
   onStop = (blobObject) => {
+    const {saveTrial, selectTrial} = this.props.actions;
     const trialsCount = this.props.trials.list.filter((item) => {
       return item.refSpeech === this.props.selectedSpeech.file_name;
     }).length;
 
     blobObject = {...blobObject, refSpeech: this.props.selectedSpeech.file_name};
     if (this.state.saveRecording) {
-      this.props.actions.saveTrial(blobObject, trialsCount);
+      saveTrial(blobObject, trialsCount);
+
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      blobToBuffer(blobObject.blob, data => {
+        audioContext.decodeAudioData(data, function(buffer) {
+          const blob = {
+            ...blobObject,
+            buffer
+          };
+          selectTrial(blob);
+        });
+      });
     }
   }
 
@@ -83,7 +97,8 @@ export default connect(
   }),
   dispatch => ({
     actions: bindActionCreators({
-      saveTrial
+      saveTrial,
+      selectTrial
     }, dispatch)
   })
 )(RecorderContainer);

@@ -14,7 +14,6 @@ export default function(state = initialTrialState, action) {
       newList.splice(0, 0, action.trial);
       return {
         ...state,
-        selectedTrial: action.trial,
         list: newList
       };
     }
