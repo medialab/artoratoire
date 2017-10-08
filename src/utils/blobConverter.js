@@ -16,3 +16,9 @@ export function blobToDataURL(blob, callback) {
   reader.readAsDataURL(blob);
 }
 
+export function blobToBuffer(blob, callback) {
+  const reader = new FileReader();
+  reader.onload = e => callback(e.target.result);
+  reader.readAsArrayBuffer(blob);
+}
+

@@ -7,6 +7,7 @@ import './App.scss';
 import Header from '../../components/Header/Header';
 import PlaylistContainer from '../PlaylistContainer/PlaylistContainer';
 import RecorderContainer from '../RecorderContainer/RecorderContainer';
+import TrialsContainer from '../TrialsContainer/TrialsContainer';
 
 const App = ({
   lang,
@@ -22,6 +23,11 @@ const App = ({
         <section>
           <div className="container">
             <RecorderContainer />
+          </div>
+        </section>
+        <section>
+          <div className="container">
+            <TrialsContainer />
           </div>
         </section>
       </div>

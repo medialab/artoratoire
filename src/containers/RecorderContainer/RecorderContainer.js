@@ -5,22 +5,16 @@ import {connect} from 'react-redux';
 
 import './RecorderContainer.scss';
 import StreamingWave from '../../components/StreamingWave/StreamingWave';
-import {saveRecording, getRecordings, clearRecordings} from './actions';
-import {dataURLtoBlob} from '../../utils/blobConverter';
+import {saveTrial} from '../TrialsContainer/actions';
 
 class RecorderContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      blobURL: null,
       isRecording: false,
       saveRecording: false,
       audioElement: null
     };
-  }
-
-  componentDidMount() {
-    this.props.actions.getRecordings();
   }
 
   startRecording = () => {
@@ -43,13 +37,13 @@ class RecorderContainer extends Component {
   }
 
   onStop = (blobObject) => {
-    const recordingsCount = this.props.recordings.list.filter((item) => {
+    const trialsCount = this.props.trials.list.filter((item) => {
       return item.refSpeech === this.props.selectedSpeech.file_name;
     }).length;
 
     blobObject = {...blobObject, refSpeech: this.props.selectedSpeech.file_name};
     if (this.state.saveRecording) {
-      this.props.actions.saveRecording(blobObject, recordingsCount);
+      this.props.actions.saveTrial(blobObject, trialsCount);
     }
   }
 
@@ -70,31 +64,9 @@ class RecorderContainer extends Component {
             <div>
               <button className="button" onClick={this.startRecording}>start</button>
               <button className="button" onClick={this.saveRecording}>stop/save</button>
-              <button className="button" onClick={this.props.actions.clearRecordings}>clear</button>
             </div>
-            <audio controls="controls" src={this.state.blobURL}></audio>
           </div>
-          <ul className="aort-RecordingsItem">
-            {
-              this.props.recordings.list
-              .filter((item) => {
-                return item.refSpeech === this.props.selectedSpeech.file_name;
-              })
-              .map((item, i) => {
-                const playRecording = () => {
-                  const blob = dataURLtoBlob(item.dataUrl);
-                  this.setState({
-                    blobURL: window.URL.createObjectURL(blob)
-                  });
-                };
-                return (
-                  <li key={i} onClick={playRecording}>
-                    <span>{item.title}</span>
-                  </li>
-                );
-              })
-            }
-          </ul>
+
         </div> : null
     );
   }
@@ -107,13 +79,11 @@ RecorderContainer.contextTypes = {
 export default connect(
   state => ({
     selectedSpeech: state.playlist.selectedSpeech,
-    recordings: state.recordings
+    trials: state.trials
   }),
   dispatch => ({
     actions: bindActionCreators({
-      saveRecording,
-      getRecordings,
-      clearRecordings
+      saveTrial
     }, dispatch)
   })
 )(RecorderContainer);

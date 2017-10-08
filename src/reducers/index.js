@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
 import {i18nState} from 'redux-i18n';
 import playlist from '../containers/PlaylistContainer/reducer';
-import recordings from '../containers/RecorderContainer/reducer';
+import trials from '../containers/TrialsContainer/reducer';
 
 
 const rootReducer = combineReducers({
   playlist,
-  recordings,
+  trials,
   i18nState
 });
 

@@ -16,6 +16,7 @@ import SpeechSummary from '../../components/SpeechSummary/SpeechSummary';
 const PlaylistContainer = ({
   selectedCategory,
   selectedSpeech,
+  selectedTrial,
   actions
 }, context) => {
   const translate = context.t;
@@ -51,8 +52,7 @@ const PlaylistContainer = ({
       <div>
         {
           selectedSpeech.content ?
-            <SpeechSummary speech={selectedSpeech} /> : null
-
+            <SpeechSummary speech={selectedSpeech} trial={selectedTrial} /> : null
         }
       </div>
     </div>
@@ -66,7 +66,8 @@ PlaylistContainer.contextTypes = {
 export default connect(
   state => ({
     selectedCategory: state.playlist.selectedCategory,
-    selectedSpeech: state.playlist.selectedSpeech
+    selectedSpeech: state.playlist.selectedSpeech,
+    selectedTrial: state.trials.selectedTrial
   }),
   dispatch => ({
     actions: bindActionCreators({

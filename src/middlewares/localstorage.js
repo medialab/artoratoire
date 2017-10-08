@@ -1,17 +1,17 @@
-import {SAVE_RECORDING, GET_RECORDINGS, INIT_RECORDINGS, CLEAR_RECORDINGS, EXCEED_MAX_STORAGE} from '../containers/RecorderContainer/actions';
+import {SAVE_TRIAL, DELETE_TIRAL, GET_TRIALS, INIT_TRIALS, CLEAR_TRIALS, EXCEED_MAX_STORAGE} from '../containers/TrialsContainer/actions';
 
 
 export default function localStorageMiddleware({dispatch, getState}) {
   return next => action => {
     // next(action);
-    if (action.type === SAVE_RECORDING) {
-      // save the whole list recordings first
+    if (action.type === SAVE_TRIAL) {
+      // save the whole list trials first
       try {
-        const prevRecordings = getState().recordings.list;
-        const newRecordings = prevRecordings.slice();
-        newRecordings.splice(0, 0, action.recording);
+        const prevTrials = getState().trials.list;
+        const newTrials = prevTrials.slice();
+        newTrials.splice(0, 0, action.trial);
 
-        localStorage.setItem('recordings', JSON.stringify(newRecordings));
+        localStorage.setItem('trials', JSON.stringify(newTrials));
       }
       catch (err) {
         // if exceed max quota
@@ -20,28 +20,38 @@ export default function localStorageMiddleware({dispatch, getState}) {
         return;
       }
     }
-    if (action.type === GET_RECORDINGS) {
+
+    if (action.type === GET_TRIALS) {
       try {
-        const recordings = JSON.parse(localStorage.getItem('recordings'));
-        if (recordings !== null) {
-          const list = recordings.sort((a, b) => {
+        const trials = JSON.parse(localStorage.getItem('trials'));
+        if (trials !== null) {
+          const list = trials.sort((a, b) => {
             return b.startTime - a.startTime;
           });
-          dispatch({type: INIT_RECORDINGS, list});
+          dispatch({type: INIT_TRIALS, list});
         }
       }
       catch (err) {
         console.log(err);
       }
     }
-    if (action.type === CLEAR_RECORDINGS) {
+    if (action.type === CLEAR_TRIALS) {
       try {
-        localStorage.removeItem('recordings');
+        localStorage.removeItem('trials');
       }
       catch (err) {
         console.log(err);
       }
     }
     next(action);
+    if (action.type === DELETE_TIRAL) {
+      const trials = getState().trials.list;
+      try {
+        localStorage.setItem('trials', JSON.stringify(trials));
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
   };
 }
