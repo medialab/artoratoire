@@ -1,6 +1,5 @@
 import axios from 'axios';
 import textExtractor from '../../utils/textExtractor';
-import {flatten} from 'lodash';
 
 // Actions
 
@@ -22,23 +21,17 @@ function getSpeechAudio(speech) {
     responseType: 'arraybuffer'
   });
 }
-function getSpeechAligner(speech) {
-  return axios.get(`../../speech_material/${speech.file_name}.json`);
-}
 
 export const selectSpeech = speech => {
   return dispatch => {
-    axios.all([getSpeechText(speech), getSpeechAudio(speech), getSpeechAligner(speech)])
-    .then(axios.spread((text, audio, json) => {
+    axios.all([getSpeechText(speech), getSpeechAudio(speech)])
+    .then(axios.spread((text, audio) => {
       const content = textExtractor(text.data, speech.lang);
-      const aligner = flatten(json.data.map((d) => d.words))
-                      .filter((d) => d.duration !== '0.00');
       audioContext.decodeAudioData(audio.data, buffer => {
         speech = {
           ...speech,
           ...content,
-          buffer,
-          aligner
+          buffer
         };
         dispatch({type: SELECT_SPEECH, speech});
       });
