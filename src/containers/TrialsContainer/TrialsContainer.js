@@ -39,6 +39,7 @@ class TrialsContainer extends Component {
                   audioContext.decodeAudioData(data, function(buffer) {
                     item = {
                       ...item,
+                      blob,
                       buffer
                     };
                     selectTrial(item);

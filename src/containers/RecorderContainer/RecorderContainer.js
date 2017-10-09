@@ -51,11 +51,11 @@ class RecorderContainer extends Component {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       blobToBuffer(blobObject.blob, data => {
         audioContext.decodeAudioData(data, function(buffer) {
-          const blob = {
+          const trial = {
             ...blobObject,
             buffer
           };
-          selectTrial(blob);
+          selectTrial(trial);
         });
       });
     }
