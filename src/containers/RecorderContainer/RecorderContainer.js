@@ -14,8 +14,7 @@ class RecorderContainer extends Component {
     super(props);
     this.state = {
       isRecording: false,
-      saveRecording: false,
-      audioElement: null
+      saveRecording: false
     };
   }
 
@@ -72,6 +71,7 @@ class RecorderContainer extends Component {
               backgroundColor="#eee"
               audioBitsPerSecond={128000}
               onStop={this.onStop}
+              speech={this.props.selectedSpeech}
               strokeColor="#000000" />
           </div>
           <div>

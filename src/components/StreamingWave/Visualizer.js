@@ -11,6 +11,7 @@ const Visualizer = {
     canvasCtx.clearRect(0, 0, width, height);
     canvasCtx.fillStyle = backgroundColor;
     canvasCtx.fillRect(0, 0, width, height);
+    canvasCtx.fillStyle = strokeColor;
 
     const analyser = audioContext.getAnalyser();
     analyser.fftSize = 1024;
@@ -18,17 +19,11 @@ const Visualizer = {
 
     // Render the bars
     const renderBars = (bars) => {
-      if (!drawing) {
-        drawing = true;
-        window.requestAnimationFrame(() => {
-          canvasCtx.clearRect(0, 0, width, height);
-          canvasCtx.fillStyle = strokeColor;
-          bars.forEach((bar, i) => {
-            canvasCtx.fillRect(i * (barWidth + barGutter), (1 + bar.min) * halfHeight, barWidth, (bar.max - bar.min) * halfHeight);
-          });
-          drawing = false;
+      window.requestAnimationFrame(() => {
+        bars.forEach((bar, i) => {
+          canvasCtx.fillRect(i * (barWidth + barGutter), (1 + bar.min) * halfHeight, barWidth, (bar.max - bar.min) * halfHeight);
         });
-      }
+      });
     };
 
     // Process the microphone input

@@ -42,7 +42,7 @@ export default class StreamingWave extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {isRecording, clearCanvas} = nextProps;
+    const {isRecording, speech} = nextProps;
     const {micRecorder} = this.state;
     if (isRecording) {
       if (micRecorder) {
@@ -53,6 +53,9 @@ export default class StreamingWave extends Component {
       if (micRecorder) {
         micRecorder.stopRecording();
       }
+    }
+    if (speech.label !== this.props.speech.label) {
+      this.initCanvas();
     }
   }
 
@@ -71,11 +74,12 @@ export default class StreamingWave extends Component {
     Visualizer.visualizeStreamingWave(audioCtx, canvasCtx, canvas, width, height, backgroundColor, strokeColor);
   }
 
-  clear() {
-    const {width, height} = this.props;
+  initCanvas() {
+    const {width, height, backgroundColor} = this.props;
     const canvas = this.node;
     const canvasCtx = canvas.getContext('2d');
     canvasCtx.clearRect(0, 0, width, height);
+    canvasCtx.fillStyle = backgroundColor;
   }
 
   render() {
@@ -99,8 +103,7 @@ StreamingWave.defaultProps = {
   className: 'visualizer',
   audioBitsPerSecond: 48000,
   mimeType: 'audio/mpeg',
-  record: false,
+  isRecording: false,
   width: 960,
   height: 200,
-  visualSetting: 'sinewave'
 };
