@@ -24,21 +24,21 @@ export class MicRecorder {
     startTime = Date.now();
 
     //initialize/resume recorder and audioctx
-    if(mediaRecorder) {
-      if(audioCtx && audioCtx.state === 'suspended') {
+    if (mediaRecorder) {
+      if (audioCtx && audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
 
-      if(mediaRecorder && mediaRecorder.state === 'paused') {
+      if (mediaRecorder && mediaRecorder.state === 'paused') {
         mediaRecorder.resume();
         return;
       }
 
-      if(audioCtx && mediaRecorder && mediaRecorder.state === 'inactive') {
+      if (audioCtx && mediaRecorder && mediaRecorder.state === 'inactive') {
         mediaRecorder.start(10);
         const source = audioCtx.createMediaStreamSource(stream);
         source.connect(analyser);
-        if(onStartCallback) onStartCallback();
+        if (onStartCallback) onStartCallback();
       }
     }
     else {

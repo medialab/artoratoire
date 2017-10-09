@@ -1,11 +1,12 @@
+import {min, max} from 'lodash';
 
 const Visualizer = {
   visualizeStreamingWave (audioContext, canvasCtx, canvas, width, height, backgroundColor, strokeColor) {
     let bars = [];
     let drawing = false;
-    const barWidth = 2;
-    const barGutter = 2;
-    let halfHeight = 0;
+    const barWidth = 1;
+    const barGutter = 1;
+    const halfHeight = canvas.offsetHeight / 2;
 
     canvasCtx.clearRect(0, 0, width, height);
     canvasCtx.fillStyle = backgroundColor;
@@ -21,11 +22,9 @@ const Visualizer = {
         drawing = true;
         window.requestAnimationFrame(() => {
           canvasCtx.clearRect(0, 0, width, height);
-
-          bars.forEach((bar, index) => {
-            canvasCtx.fillStyle = strokeColor;
-            canvasCtx.fillRect((index * (barWidth + barGutter)), halfHeight, barWidth, (halfHeight * (bar / 100)));
-            canvasCtx.fillRect((index * (barWidth + barGutter)), (halfHeight - (halfHeight * (bar / 100))), barWidth, (halfHeight * (bar / 100)));
+          canvasCtx.fillStyle = strokeColor;
+          bars.forEach((bar, i) => {
+            canvasCtx.fillRect(i * (barWidth + barGutter), (1 + bar.min) * halfHeight, barWidth, (bar.max - bar.min) * halfHeight);
           });
           drawing = false;
         });
@@ -33,10 +32,14 @@ const Visualizer = {
     };
 
     // Process the microphone input
-    const processInput = () => {
-      const array = new Uint8Array(analyser.frequencyBinCount);
-      analyser.getByteFrequencyData(array);
-      bars.push(this.getAverageVolume(array));
+    const processInput = (e) => {
+      // const array = new Uint8Array(analyser.frequencyBinCount); //512
+      // analyser.getByteFrequencyData(array);
+      // const array = new Uint8Array(analyser.fftSize); //1024
+      // analyser.getByteTimeDomainData(array);
+      const array = new Float32Array(e.inputBuffer.getChannelData(0)); //2048
+      // bars.push(this.getAverageVolume(array));
+      bars.push(this.getPeaks(array));
       if (bars.length <= Math.floor(width / (barWidth + barGutter))) {
         renderBars(bars);
       }
@@ -47,7 +50,6 @@ const Visualizer = {
 
     // Setup the canvas to draw the waveform
     const setupWaveform = () => {
-      halfHeight = canvas.offsetHeight / 2;
       const context = audioContext.getAudioContext();
       const scriptProcessor = audioContext.getScriptProcessor();
 
@@ -59,6 +61,12 @@ const Visualizer = {
     setupWaveform();
   },
 
+  getPeaks(array) {
+    return {
+      min: min(array),
+      max: max(array)
+    };
+  },
   // Calculate the average volume
   getAverageVolume(array) {
     const length = array.length;

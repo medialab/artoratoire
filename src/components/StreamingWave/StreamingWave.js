@@ -42,7 +42,7 @@ export default class StreamingWave extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {isRecording} = nextProps;
+    const {isRecording, clearCanvas} = nextProps;
     const {micRecorder} = this.state;
     if (isRecording) {
       if (micRecorder) {
@@ -82,7 +82,7 @@ export default class StreamingWave extends Component {
     const {width, height} = this.props;
 
     return (
-       <canvas ref={node => this.node = node} height={height} width={width}></canvas>
+      <canvas ref={node => this.node = node} height={height} width={width}></canvas>
     );
   }
 }
