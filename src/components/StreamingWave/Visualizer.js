@@ -21,7 +21,9 @@ const Visualizer = {
     const renderBars = (bars) => {
       window.requestAnimationFrame(() => {
         bars.forEach((bar, i) => {
-          canvasCtx.fillRect(i * (barWidth + barGutter), (1 + bar.min) * halfHeight, barWidth, (bar.max - bar.min) * halfHeight);
+          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.max);
+          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.min);
+          // canvasCtx.fillRect(i * (barWidth + barGutter), (1 + bar.min) * halfHeight, barWidth, (bar.max - bar.min) * halfHeight);
         });
       });
     };
@@ -32,7 +34,7 @@ const Visualizer = {
       // analyser.getByteFrequencyData(array);
       // const array = new Uint8Array(analyser.fftSize); //1024
       // analyser.getByteTimeDomainData(array);
-      const array = new Float32Array(e.inputBuffer.getChannelData(0)); //2048
+      const array = new Float32Array(e.inputBuffer.getChannelData(0)); //4096
       // bars.push(this.getAverageVolume(array));
       bars.push(this.getPeaks(array));
       if (bars.length <= Math.floor(width / (barWidth + barGutter))) {
