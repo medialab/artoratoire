@@ -17,12 +17,21 @@ const phonoHierarchy = [
 
 const phonoTokenizer = createTokenizer({hierarchy: phonoHierarchy});
 
-export default function textExtractor(text, lang) {
-  const sourceString = text.match(/<small>(.*?)<\/small>/g)[0] || '';
-  const sourceArray = sourceString.replace(/<\/?small>/g, '').split('<BR>');
-  const content = text.replace(/<i>(.*?)<\/i>/g, '')
-                          .replace(/<BR>/g, '')
-                          .replace(/\n\s*\n/g, '\n');
+export default function textExtractor(text, lang, rawText = true) {
+  let sourceString;
+  let sourceArray;
+  let content;
+
+  if (rawText) {
+    sourceString = text.match(/<small>(.*?)<\/small>/g)[0] || '';
+    sourceArray = sourceString.replace(/<\/?small>/g, '').split('<BR>');
+    content = text.replace(/<i>(.*?)<\/i>/g, '')
+                            .replace(/<BR>/g, '')
+                            .replace(/\n\s*\n/g, '\n');
+  }
+  else {
+    content = text;
+  }
   const wordList = words(content);
 
   const syllables = wordList.map((word) => {
@@ -39,13 +48,21 @@ export default function textExtractor(text, lang) {
       };
     }
   });
-
-  return {
-    content,
-    wordCount: wordList.length,
-    syllables,
-    source: sourceArray[0],
-    url: sourceArray[1]
-  };
+  if (rawText) {
+    return {
+      content,
+      wordCount: wordList.length,
+      syllables,
+      source: sourceArray[0],
+      url: sourceArray[1]
+    };
+  }
+  else {
+    return {
+      content,
+      wordCount: wordList.length,
+      syllables
+    };
+  }
 }
 
