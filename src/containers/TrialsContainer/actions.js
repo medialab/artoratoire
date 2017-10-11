@@ -17,7 +17,6 @@ export const SELECT_TRIAL = 'SELECT_TRIAL';
  */
 export function saveTrial(trial, count) {
   return (dispatch) => {
-    // const {count} = getState().TRIALs;
     const id = uuid.v4();
     blobToDataURL(trial.blob, dataUrl => {
       trial = {...trial,

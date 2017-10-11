@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 
 // import './TrialsContainer.scss';
 import {getTrials, deleteTrial, selectTrial} from './actions';
+import {setUserSpeechAudio} from '../PlaylistContainer/actions';
 import {dataURLtoBlob, blobToBuffer} from '../../utils/blobConverter';
 import PlaybackWave from '../../components/PlaybackWave/PlaybackWave';
 
@@ -12,7 +13,6 @@ class TrialsContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      blobURL: null,
       playing: false
     };
     this.handleTogglePlay = this.handleTogglePlay.bind(this);
@@ -33,26 +33,26 @@ class TrialsContainer extends Component {
       playing: false
     });
   }
-
   render() {
     const {trials, selectedSpeech} = this.props;
     return (
       <div>
         {
-          /*trials.selectedTrial ?
+          trials.selectedTrial ?
             <div>
-              <PlaybackWave buffer={trials.selectedTrial.buffer} src={this.state.blobURL ? this.state.blobURL : trials.selectedTrial.blobURL} playing={this.state.playing} onEnded={this.onEnded} />
+              <PlaybackWave buffer={trials.selectedTrial.buffer} src={trials.selectedTrial.blobURL} playing={this.state.playing} onEnded={this.onEnded} />
               <button onClick={this.handleTogglePlay}>play/pause</button>
-            </div> : null*/
+            </div> : null
         }
         <ul className="aort-TrialItem">
           {
             trials.list
             .filter((item) => {
-              return item.refSpeech === selectedSpeech.file_name;
+              return item.refSpeech === selectedSpeech.label;
             })
             .map((item, i) => {
-              const {selectTrial} = this.props.actions;
+              const {selectTrial, setUserSpeechAudio} = this.props.actions;
+              const {selectedCategory, selectedSpeech} = this.props;
               const selectItem = () => {
                 const blob = dataURLtoBlob(item.dataUrl);
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -60,30 +60,50 @@ class TrialsContainer extends Component {
                   audioContext.decodeAudioData(data, function(buffer) {
                     item = {
                       ...item,
-                      blob,
+                      blobURL: window.URL.createObjectURL(blob),
                       buffer
                     };
                     selectTrial(item);
                   });
                 });
+              };
 
-                this.setState({
-                  blobURL: window.URL.createObjectURL(blob)
+              const selectItemAsRef = () => {
+                const blob = dataURLtoBlob(item.dataUrl);
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                blobToBuffer(blob, data => {
+                  audioContext.decodeAudioData(data, function(buffer) {
+                    item = {
+                      trialId: item.id,
+                      blobURL: window.URL.createObjectURL(blob),
+                      buffer
+                    };
+                    setUserSpeechAudio(selectedSpeech, item);
+                  });
                 });
               };
 
               const deleteItem = () => this.props.actions.deleteTrial(item);
-              // const selectItem = () => this.props.actions.selectTrial(item);
               return (
                 <li key={i}>
                   <span>{item.title}</span>
-                  <button onClick={selectItem}>select</button>
-                  <button onClick={deleteItem}>delete</button>
+                  {
+                    selectedCategory.value === 'mySpeeches' && selectedSpeech.trialId !== item.id ?
+                      <button onClick={selectItemAsRef}>select as reference</button> : null
+                  }
+                  {
+                    selectedSpeech.trialId !== item.id ?
+                      <span>
+                        <button onClick={selectItem}>compare trial to speech</button>
+                        <button onClick={deleteItem}>delete</button>
+                      </span> : null
+                  }
+
                 </li>
               );
             })
           }
-      </ul>
+        </ul>
       </div>
     );
   }
@@ -95,6 +115,7 @@ TrialsContainer.contextTypes = {
 
 export default connect(
   state => ({
+    selectedCategory: state.playlist.selectedCategory,
     selectedSpeech: state.playlist.selectedSpeech,
     trials: state.trials
   }),
@@ -102,7 +123,8 @@ export default connect(
     actions: bindActionCreators({
       getTrials,
       deleteTrial,
-      selectTrial
+      selectTrial,
+      setUserSpeechAudio
     }, dispatch)
   })
 )(TrialsContainer);

@@ -40,10 +40,10 @@ class RecorderContainer extends Component {
   onStop = (blobObject) => {
     const {saveTrial, selectTrial} = this.props.actions;
     const trialsCount = this.props.trials.list.filter((item) => {
-      return item.refSpeech === this.props.selectedSpeech.file_name;
+      return item.refSpeech === this.props.selectedSpeech.label;
     }).length;
 
-    blobObject = {...blobObject, refSpeech: this.props.selectedSpeech.file_name};
+    blobObject = {...blobObject, refSpeech: this.props.selectedSpeech.label};
     if (this.state.saveRecording) {
       saveTrial(blobObject, trialsCount);
 
@@ -62,7 +62,7 @@ class RecorderContainer extends Component {
 
   render() {
     return (
-      this.props.selectedSpeech.file_name ?
+      this.props.selectedSpeech.label ?
         <div className="arot-RecorderContainer">
           <div>
             <StreamingWave

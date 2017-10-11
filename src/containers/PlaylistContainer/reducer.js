@@ -1,4 +1,4 @@
-import {SELECT_CATEGORY, SELECT_SPEECH, SELECT_USER_SPEECH, SAVE_USER_SPEECHES, INIT_USER_SPEECHES} from './actions';
+import {SELECT_CATEGORY, SELECT_SPEECH, SAVE_USER_SPEECHES, INIT_USER_SPEECHES} from './actions';
 
 const initialPlaylistState = {
   selectedCategory: {},
@@ -23,11 +23,7 @@ export default function playlist(state = initialPlaylistState, action) {
         ...state,
         selectedSpeech: action.speech
       };
-    case SELECT_USER_SPEECH:
-      return {
-        ...state,
-        selectedSpeech: action.speech
-      };
+
     case SAVE_USER_SPEECHES:
       const newList = state.userSpeeches.list.slice();
       newList.splice(0, 0, action.speech);

@@ -78,10 +78,31 @@ class PlaylistContainer extends Component {
   onNewSpeechCancelled () {
     this.hideNewSpeechForm();
   }
+
   onNewSpeechSaved (speech) {
     this.props.actions.saveUserSpeeches(speech, this.props.userSpeeches);
     this.hideNewSpeechForm();
   }
+
+  renderPlayBack() {
+    const {selectedSpeech} = this.props;
+    let source;
+    if (selectedSpeech.file_name) {
+      source = `../../speech_material/${selectedSpeech.file_name}.mp3`;
+    }
+    else {
+      source = selectedSpeech.blobURL;
+    }
+    if (selectedSpeech.buffer) {
+      return (
+        <div>
+          <PlaybackWave src={source} buffer={selectedSpeech.buffer} playing={this.state.playing} onEnded={this.onEnded} />
+          <button onClick={this.handleTogglePlay}>play/pause</button>
+        </div>
+      );
+    }
+  }
+
   render() {
     const {selectedSpeech, selectedCategory, selectedTrial, userSpeeches} = this.props;
     const translate = this.context.t;
@@ -122,13 +143,9 @@ class PlaylistContainer extends Component {
             }
           </div>
         </div>
-        {
-          selectedSpeech.buffer && !this.state.addNew ?
-            <div>
-              <PlaybackWave src={`../../speech_material/${selectedSpeech.file_name}.mp3`} buffer={selectedSpeech.buffer} playing={this.state.playing} onEnded={this.onEnded} />
-              <button onClick={this.handleTogglePlay}>play/pause</button>
-            </div> : null
-        }
+
+        {this.renderPlayBack()}
+
         <div>
           {
             selectedSpeech.content && !this.state.addNew ?

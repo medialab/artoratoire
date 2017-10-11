@@ -1,4 +1,4 @@
-import {SAVE_TRIAL, DELETE_TIRAL, GET_TRIALS, INIT_TRIALS, CLEAR_TRIALS, EXCEED_MAX_STORAGE} from '../containers/TrialsContainer/actions';
+import {SAVE_TRIAL, DELETE_TRIAL, GET_TRIALS, INIT_TRIALS, CLEAR_TRIALS, EXCEED_MAX_STORAGE} from '../containers/TrialsContainer/actions';
 import {SAVE_USER_SPEECHES, GET_USER_SPEECHES, INIT_USER_SPEECHES} from '../containers/PlaylistContainer/actions';
 
 
@@ -11,7 +11,6 @@ export default function localStorageMiddleware({dispatch, getState}) {
         const prevTrials = getState().trials.list;
         const newTrials = prevTrials.slice();
         newTrials.splice(0, 0, action.trial);
-
         localStorage.setItem('trials', JSON.stringify(newTrials));
       }
       catch (err) {
@@ -38,6 +37,18 @@ export default function localStorageMiddleware({dispatch, getState}) {
       }
     }
 
+    if (action.type === GET_USER_SPEECHES) {
+      try {
+        const speeches = JSON.parse(localStorage.getItem('userSpeeches'));
+          if (speeches !== null) {
+            dispatch({type: INIT_USER_SPEECHES, speeches});
+          }
+        }
+      catch (err) {
+        console.log(err);
+      }
+    }
+
     if (action.type === GET_TRIALS) {
       try {
         const trials = JSON.parse(localStorage.getItem('trials'));
@@ -53,18 +64,6 @@ export default function localStorageMiddleware({dispatch, getState}) {
       }
     }
 
-    if (action.type === GET_USER_SPEECHES) {
-      try {
-        const speeches = JSON.parse(localStorage.getItem('userSpeeches'));
-          if (speeches !== null) {
-            dispatch({type: INIT_USER_SPEECHES, speeches});
-          }
-        }
-      catch (err) {
-        console.log(err);
-      }
-    }
-
     if (action.type === CLEAR_TRIALS) {
       try {
         localStorage.removeItem('trials');
@@ -73,8 +72,10 @@ export default function localStorageMiddleware({dispatch, getState}) {
         console.log(err);
       }
     }
+
     next(action);
-    if (action.type === DELETE_TIRAL) {
+
+    if (action.type === DELETE_TRIAL) {
       const trials = getState().trials.list;
       try {
         localStorage.setItem('trials', JSON.stringify(trials));
