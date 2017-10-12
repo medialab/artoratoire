@@ -11,7 +11,7 @@ const SpeechSummary = ({speech, trial}, context) => {
 
 
   const TrailSummary = () => {
-    const trialSilence = silenceMeasure(trial.buffer.getChannelData(0)).toFixed(2);
+    const trialSilence = silenceRmsCount(trial.buffer.getChannelData(0)).toFixed(2);
     return (
       <div>
         <p>trial silence duration: {trialSilence}s</p>

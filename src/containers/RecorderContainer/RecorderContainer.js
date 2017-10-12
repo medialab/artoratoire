@@ -75,12 +75,9 @@ class RecorderContainer extends Component {
               strokeColor="#000000" />
           </div>
           <div>
-            <div>
-              <button className="button" onClick={this.startRecording}>start</button>
-              <button className="button" onClick={this.saveRecording}>stop/save</button>
-            </div>
+            <button className="button" onClick={this.startRecording}>start</button>
+            <button className="button" onClick={this.saveRecording}>stop/save</button>
           </div>
-
         </div> : null
     );
   }

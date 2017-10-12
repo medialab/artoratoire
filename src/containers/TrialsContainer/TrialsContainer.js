@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-// import './TrialsContainer.scss';
+import {SAMPLE_RATE} from '../../constants/AudioConstants';
+import './TrialsContainer.scss';
 import {getTrials, deleteTrial, selectTrial} from './actions';
 import {setUserSpeechAudio} from '../PlaylistContainer/actions';
 import {dataURLtoBlob, blobToBuffer} from '../../utils/blobConverter';
 import PlaybackWave from '../../components/PlaybackWave/PlaybackWave';
+
 
 class TrialsContainer extends Component {
   constructor(props) {
@@ -33,17 +35,28 @@ class TrialsContainer extends Component {
       playing: false
     });
   }
+
+  renderPlayBack() {
+    const {trials} = this.props;
+    if (trials.selectedTrial) {
+      const data = trials.selectedTrial.buffer.getChannelData(0);
+      const width = Math.ceil((data.length / SAMPLE_RATE) * 2);
+      return (
+        <div>
+          <div className="wave-container">
+            <PlaybackWave buffer={trials.selectedTrial.buffer} width={width} src={trials.selectedTrial.blobURL} playing={this.state.playing} onEnded={this.onEnded} />
+          </div>
+          <button onClick={this.handleTogglePlay}>play/pause</button>
+        </div>
+      );
+    }
+  }
   render() {
     const {trials, selectedSpeech} = this.props;
+
     return (
       <div>
-        {
-          trials.selectedTrial ?
-            <div>
-              <PlaybackWave buffer={trials.selectedTrial.buffer} src={trials.selectedTrial.blobURL} playing={this.state.playing} onEnded={this.onEnded} />
-              <button onClick={this.handleTogglePlay}>play/pause</button>
-            </div> : null
-        }
+        {this.renderPlayBack()}
         <ul className="aort-TrialItem">
           {
             trials.list

@@ -7,17 +7,16 @@ const Visualizer = {
     const barGutter = 1;
     const halfHeight = canvas.offsetHeight / 2;
 
-    canvasCtx.clearRect(0, 0, width, height);
-    canvasCtx.fillStyle = backgroundColor;
-    canvasCtx.fillRect(0, 0, width, height);
-    canvasCtx.fillStyle = strokeColor;
-
     const analyser = audioContext.getAnalyser();
     // analyser.fftSize = 8192;
     // analyser.smoothingTimeConstant = 0.3;
 
     // Render the bars
     const renderBars = (bars) => {
+      canvasCtx.clearRect(0, 0, width, height);
+      canvasCtx.fillStyle = backgroundColor;
+      canvasCtx.fillRect(0, 0, width, height);
+      canvasCtx.fillStyle = strokeColor;
       window.requestAnimationFrame(() => {
         bars.forEach((bar, i) => {
           canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.max);
