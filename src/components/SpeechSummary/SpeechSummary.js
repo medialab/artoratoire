@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './SpeechSummary.scss';
-import silenceMeature from '../../utils/silenceMeasure';
+import {silenceRmsCount} from '../../utils/audioMeasure';
 
 
 const SpeechSummary = ({speech, trial}, context) => {
@@ -11,7 +11,7 @@ const SpeechSummary = ({speech, trial}, context) => {
 
 
   const TrailSummary = () => {
-    const trialSilence = silenceMeature(trial.buffer.getChannelData(0)).toFixed(2);
+    const trialSilence = silenceMeasure(trial.buffer.getChannelData(0)).toFixed(2);
     return (
       <div>
         <p>trial silence duration: {trialSilence}s</p>
@@ -20,7 +20,7 @@ const SpeechSummary = ({speech, trial}, context) => {
     );
   };
   const BufferSummary = () => {
-    const speechSilence = silenceMeature(speech.buffer.getChannelData(0)).toFixed(2);
+    const speechSilence = silenceRmsCount(speech.buffer.getChannelData(0)).toFixed(2);
     return (
       <div>
         <p>speech silence duration: {speechSilence}s</p>

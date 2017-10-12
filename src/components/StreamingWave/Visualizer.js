@@ -1,9 +1,8 @@
-import {min, max} from 'lodash';
+import {sampleProps} from '../../utils/audioMeasure';
 
 const Visualizer = {
   visualizeStreamingWave (audioContext, canvasCtx, canvas, width, height, backgroundColor, strokeColor) {
     let bars = [];
-    let drawing = false;
     const barWidth = 1;
     const barGutter = 1;
     const halfHeight = canvas.offsetHeight / 2;
@@ -14,8 +13,8 @@ const Visualizer = {
     canvasCtx.fillStyle = strokeColor;
 
     const analyser = audioContext.getAnalyser();
-    analyser.fftSize = 1024;
-    analyser.smoothingTimeConstant = 0.3;
+    // analyser.fftSize = 8192;
+    // analyser.smoothingTimeConstant = 0.3;
 
     // Render the bars
     const renderBars = (bars) => {
@@ -30,13 +29,13 @@ const Visualizer = {
 
     // Process the microphone input
     const processInput = (e) => {
-      // const array = new Uint8Array(analyser.frequencyBinCount); //512
-      // analyser.getByteFrequencyData(array);
-      // const array = new Uint8Array(analyser.fftSize); //1024
+      // const timearray = new Uint8Array(analyser.frequencyBinCount); //1024
+      // analyser.getByteFrequencyData(timearray);
+      // const array = new Uint8Array(analyser.fftSize); //2048
       // analyser.getByteTimeDomainData(array);
       const array = new Float32Array(e.inputBuffer.getChannelData(0)); //4096
-      // bars.push(this.getAverageVolume(array));
-      bars.push(this.getPeaks(array));
+
+      bars.push(sampleProps(array, 0));
       if (bars.length <= Math.floor(width / (barWidth + barGutter))) {
         renderBars(bars);
       }
@@ -56,24 +55,6 @@ const Visualizer = {
     };
 
     setupWaveform();
-  },
-
-  getPeaks(array) {
-    return {
-      min: min(array),
-      max: max(array)
-    };
-  },
-  // Calculate the average volume
-  getAverageVolume(array) {
-    const length = array.length;
-    let values = 0;
-    let i = 0;
-
-    for (; i < length; i++) {
-      values += array[i];
-    }
-    return values / length;
   }
 };
 

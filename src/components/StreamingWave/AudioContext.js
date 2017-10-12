@@ -1,6 +1,8 @@
+import {SAMPLE_RATE} from '../../constants/AudioConstants';
+
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const analyser = audioCtx.createAnalyser();
-const scriptProcessor = audioCtx.createScriptProcessor(4096, 1, 1);
+const scriptProcessor = audioCtx.createScriptProcessor(SAMPLE_RATE, 1, 1);
 
 const AudioContext = {
 
