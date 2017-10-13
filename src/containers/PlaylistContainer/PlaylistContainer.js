@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 
 import './PlaylistContainer.scss';
 import {selectCategory, selectSpeech, selectUserSpeech, saveUserSpeeches, getUserSpeeches} from './actions';
+import {selectTrial} from '../TrialsContainer/actions';
 
 
 import speechList from '../../speech_list.json';
@@ -36,18 +37,24 @@ class PlaylistContainer extends Component {
   }
 
   onSelectChange (category) {
-    if (category)
+    if (category && category.value !== this.props.selectedCategory.value) {
       this.props.actions.selectCategory(category);
+      this.props.actions.selectTrial(null);
+    }
     this.setState({
       addNew: false
     });
   }
 
   onSpeechClick (speech) {
-    if (this.props.selectedCategory.value === 'mySpeeches')
-      this.props.actions.selectUserSpeech(speech);
-    else
-      this.props.actions.selectSpeech(speech);
+    if (this.props.selectedSpeech.label !== speech.label) {
+      if (this.props.selectedCategory.value === 'mySpeeches')
+        this.props.actions.selectUserSpeech(speech);
+      else
+        this.props.actions.selectSpeech(speech);
+
+      this.props.actions.selectTrial(null);
+    }
     this.setState({
       addNew: false
     });
@@ -127,8 +134,12 @@ class PlaylistContainer extends Component {
                     selectedCategory.list ?
                       <PlaylistItems onClick={this.onSpeechClick} items={selectedCategory.list} selectedItem={selectedSpeech.label} /> : null
                   }
-                  <span>or </span>
-                  <a onClick={this.showNewSpeechForm}>add a speech</a>
+                  {
+                    selectedCategory.list ? null : <span>or </span>
+                  }
+                  <div>
+                    <button className="button" onClick={this.showNewSpeechForm}>Add a speech</button>
+                  </div>
                 </div> : null
             }
           </div>
@@ -143,15 +154,13 @@ class PlaylistContainer extends Component {
             }
           </div>
         </div>
-
-        {this.renderPlayBack()}
-
         <div>
           {
             selectedSpeech.content && !this.state.addNew ?
               <SpeechSummary speech={selectedSpeech} trial={selectedTrial} /> : null
           }
         </div>
+        {this.renderPlayBack()}
       </div>
     );
   }
@@ -175,7 +184,8 @@ export default connect(
       selectSpeech,
       selectUserSpeech,
       saveUserSpeeches,
-      getUserSpeeches
+      getUserSpeeches,
+      selectTrial
     }, dispatch)
   })
 )(PlaylistContainer);
