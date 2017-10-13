@@ -65,6 +65,16 @@ class RecorderContainer extends Component {
       this.props.selectedSpeech.label ?
         <div className="arot-RecorderContainer">
           <div>
+            {
+              this.state.isRecording ?
+                null : <button className="button" onClick={this.startRecording}>start recording</button>
+            }
+            {
+              this.state.isRecording ?
+                <button className="button" onClick={this.saveRecording}>stop recording</button> : null
+            }
+          </div>
+          <div>
             <StreamingWave
               className="oscilloscope"
               isRecording={this.state.isRecording}
@@ -73,10 +83,6 @@ class RecorderContainer extends Component {
               onStop={this.onStop}
               speech={this.props.selectedSpeech}
               strokeColor="#000000" />
-          </div>
-          <div>
-            <button className="button" onClick={this.startRecording}>start</button>
-            <button className="button" onClick={this.saveRecording}>stop/save</button>
           </div>
         </div> : null
     );

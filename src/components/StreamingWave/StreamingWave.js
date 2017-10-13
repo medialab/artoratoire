@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {MicRecorder} from './MicRecorder';
 import AudioContext from './AudioContext';
 import Visualizer from './Visualizer';
+import {CANVAS_HEIGHT} from '../../constants/CanvasConstants';
 
 import './StreamingWave.scss';
 
@@ -105,9 +106,8 @@ StreamingWave.propTypes = {};
 StreamingWave.defaultProps = {
   backgroundColor: '#eee',
   strokeColor: '#000000',
-  className: 'visualizer',
   audioBitsPerSecond: 48000,
   mimeType: 'audio/mpeg',
   isRecording: false,
-  height: 200,
+  height: CANVAS_HEIGHT
 };

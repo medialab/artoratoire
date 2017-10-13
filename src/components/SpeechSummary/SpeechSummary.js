@@ -13,7 +13,7 @@ const SpeechSummary = ({speech, trial}, context) => {
   const TrailSummary = () => {
     const trialSilence = silenceRmsCount(trial.buffer.getChannelData(0)).toFixed(2);
     return (
-      <div>
+      <div className="column">
         <p>trial silence duration: {trialSilence}s</p>
         <p>trial duration: {trial.buffer.duration.toFixed(2)}s</p>
       </div>
@@ -22,7 +22,7 @@ const SpeechSummary = ({speech, trial}, context) => {
   const BufferSummary = () => {
     const speechSilence = silenceRmsCount(speech.buffer.getChannelData(0)).toFixed(2);
     return (
-      <div>
+      <div className="column">
         <p>speech silence duration: {speechSilence}s</p>
         <p>speech duration: {speech.buffer.duration.toFixed(2)}s</p>
       </div>
@@ -30,9 +30,11 @@ const SpeechSummary = ({speech, trial}, context) => {
   };
 
   return (
-    <div>
-      <p>word count: {speech.wordCount}</p>
-      <p>syllables: {syllablesTotal}</p>
+    <div className="columns">
+      <div className="column">
+        <p>word count: {speech.wordCount}</p>
+        <p>syllables: {syllablesTotal}</p>
+      </div>
       {
         speech.buffer ?
           <BufferSummary /> : null

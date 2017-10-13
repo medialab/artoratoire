@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './PlaybackWave.scss';
 
 import {SAMPLE_RATE, THRESHOLD} from '../../constants/AudioConstants';
+import {BAR_WIDTH, BAR_GUTTER, CANVAS_HEIGHT} from '../../constants/CanvasConstants';
+
 import {sampleProps} from '../../utils/audioMeasure';
 
 export default class PlaybackWave extends Component {
@@ -21,6 +23,7 @@ export default class PlaybackWave extends Component {
       this.loadWave(this.props.buffer);
     });
   }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.playing) {
       if (this.audio.ended) {
@@ -40,24 +43,19 @@ export default class PlaybackWave extends Component {
   loadWave(buffer) {
     const {backgroundColor, strokeColor, height} = this.props;
     const width = this.props.width ? this.props.width : this.state.width;
+
     const canvas = this.canvas;
     const canvasCtx = canvas.getContext('2d');
     const halfHeight = canvas.offsetHeight / 2;
-    const barGutter = 1;
+    const barWidth = BAR_WIDTH;
+    const barGutter = BAR_GUTTER;
 
     canvasCtx.fillStyle = backgroundColor;
     canvasCtx.fillRect(0, 0, width, height);
     canvasCtx.fillStyle = strokeColor;
+
     const data = buffer.getChannelData(0);
     const step = SAMPLE_RATE;
-
-    let barWidth;
-    if (!this.props.barWidth) {
-      barWidth = width / (data.length / step) - barGutter;
-    }
-    else {
-      barWidth = this.props.barWidth;
-    }
 
     for (let i = 0; i < data.length / step; i ++) {
       const bar = sampleProps(data, i, step);
@@ -70,24 +68,16 @@ export default class PlaybackWave extends Component {
   }
 
   progressUpdate () {
-    const {highlightColor, onEnded} = this.props;
-    const width = this.props.width ? this.props.width : this.state.width;
+    const {highlightColor, onEnded, buffer} = this.props;
 
-    const data = this.props.buffer.getChannelData(0);
+    const data = buffer.getChannelData(0);
     const step = SAMPLE_RATE;
     const currentBars = Math.floor(this.audio.currentTime * 48000 / step);
     const canvas = this.canvas;
     const canvasCtx = canvas.getContext('2d');
     const halfHeight = canvas.offsetHeight / 2;
-    const barGutter = 1;
-
-    let barWidth;
-    if (!this.props.barWidth) {
-      barWidth = width / (data.length / step) - barGutter;
-    }
-    else {
-      barWidth = this.props.barWidth;
-    }
+    const barWidth = BAR_WIDTH;
+    const barGutter = BAR_GUTTER;
 
     if (this.audio.ended) {
       onEnded();
@@ -134,9 +124,8 @@ PlaybackWave.contextTypes = {
 PlaybackWave.propTypes = {};
 
 PlaybackWave.defaultProps = {
-  backgroundColor: '#eee',
+  backgroundColor: '#fff',
   strokeColor: '#A9A9A9',
   highlightColor: '#ff894d',
-  barWidth: 1,
-  height: 200
+  height: CANVAS_HEIGHT
 };

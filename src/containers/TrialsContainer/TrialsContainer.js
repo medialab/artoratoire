@@ -56,7 +56,6 @@ class TrialsContainer extends Component {
 
     return (
       <div>
-        {this.renderPlayBack()}
         <ul className="aort-TrialItem">
           {
             trials.list
@@ -117,6 +116,7 @@ class TrialsContainer extends Component {
             })
           }
         </ul>
+        {this.renderPlayBack()}
       </div>
     );
   }

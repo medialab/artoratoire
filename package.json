@@ -33,8 +33,7 @@
     "redux-i18n": "^1.5.4",
     "redux-thunk": "^2.2.0",
     "talisman": "^0.20.0",
-    "uuid": "^3.1.0",
-    "wavesurfer.js": "^2.0.0-beta01"
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "@yomguithereal/eslint-config": "^4.0.0",

@@ -1,15 +1,16 @@
 import {sampleProps} from '../../utils/audioMeasure';
+import {BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
 
 const Visualizer = {
   visualizeStreamingWave (audioContext, canvasCtx, canvas, width, height, backgroundColor, strokeColor) {
     let bars = [];
-    const barWidth = 1;
-    const barGutter = 1;
+    const barWidth = BAR_WIDTH;
+    const barGutter = BAR_GUTTER;
     const halfHeight = canvas.offsetHeight / 2;
 
     const analyser = audioContext.getAnalyser();
-    // analyser.fftSize = 8192;
-    // analyser.smoothingTimeConstant = 0.3;
+    analyser.fftSize = 8192;
+    analyser.smoothingTimeConstant = 0.3;
 
     // Render the bars
     const renderBars = (bars) => {
@@ -17,6 +18,7 @@ const Visualizer = {
       canvasCtx.fillStyle = backgroundColor;
       canvasCtx.fillRect(0, 0, width, height);
       canvasCtx.fillStyle = strokeColor;
+
       window.requestAnimationFrame(() => {
         bars.forEach((bar, i) => {
           canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.max);

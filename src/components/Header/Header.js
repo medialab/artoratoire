@@ -10,26 +10,26 @@ class Header extends Component {
     this.state = {
       scrollTop: 0
     };
-    this.handleScroll = this.handleScroll.bind(this);
+    // this.handleScroll = this.handleScroll.bind(this);
   }
 
-  componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
-  }
-  componentUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-  }
+  // componentDidMount() {
+  //   window.addEventListener('scroll', this.handleScroll);
+  // }
+  // componentUnmount() {
+  //   window.removeEventListener('scroll', this.handleScroll);
+  // }
 
-  handleScroll() {
-    this.setState({
-      scrollTop: window.scrollY
-    });
-  }
+  // handleScroll() {
+  //   this.setState({
+  //     scrollTop: window.scrollY
+  //   });
+  // }
 
   render() {
     const translate = this.context.t;
     return (
-      <div className={'aort-Header ' + (this.state.scrollTop > 200 ? 'smaller' : '')}>
+      <div className="aort-Header">
         <div className="columns is-centered">
           <div className="column is-half has-text-centered">
             <p className="title is-2">Artoratoire</p>
