@@ -4,12 +4,15 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import {SAMPLE_RATE} from '../../constants/AudioConstants';
+import {BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
+
 import './TrialsContainer.scss';
 import {getTrials, deleteTrial, selectTrial} from './actions';
 import {setUserSpeechAudio} from '../PlaylistContainer/actions';
 import {dataURLtoBlob, blobToBuffer} from '../../utils/blobConverter';
 import PlaybackWave from '../../components/PlaybackWave/PlaybackWave';
 
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 class TrialsContainer extends Component {
   constructor(props) {
@@ -40,11 +43,11 @@ class TrialsContainer extends Component {
     const {trials} = this.props;
     if (trials.selectedTrial) {
       const data = trials.selectedTrial.buffer.getChannelData(0);
-      const width = Math.ceil((data.length / SAMPLE_RATE) * 2);
+      const width = Math.ceil((data.length / SAMPLE_RATE) * (BAR_WIDTH + BAR_GUTTER));
       return (
         <div>
           <div className="wave-container">
-            <PlaybackWave buffer={trials.selectedTrial.buffer} width={width} src={trials.selectedTrial.blobURL} playing={this.state.playing} onEnded={this.onEnded} />
+            <PlaybackWave buffer={trials.selectedTrial.buffer} src={trials.selectedTrial.blobURL} width={width} playing={this.state.playing} onEnded={this.onEnded} />
           </div>
           <button onClick={this.handleTogglePlay}>play/pause</button>
         </div>
@@ -55,7 +58,7 @@ class TrialsContainer extends Component {
     const {trials, selectedSpeech} = this.props;
 
     return (
-      <div>
+      <div className="aort-Trials">
         <ul className="aort-TrialItem">
           {
             trials.list
@@ -67,7 +70,6 @@ class TrialsContainer extends Component {
               const {selectedCategory, selectedSpeech} = this.props;
               const selectItem = () => {
                 const blob = dataURLtoBlob(item.dataUrl);
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 blobToBuffer(blob, data => {
                   audioContext.decodeAudioData(data, function(buffer) {
                     item = {
@@ -82,7 +84,6 @@ class TrialsContainer extends Component {
 
               const selectItemAsRef = () => {
                 const blob = dataURLtoBlob(item.dataUrl);
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 blobToBuffer(blob, data => {
                   audioContext.decodeAudioData(data, function(buffer) {
                     item = {

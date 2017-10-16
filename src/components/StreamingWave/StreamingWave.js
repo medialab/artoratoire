@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {MicRecorder} from './MicRecorder';
 import AudioContext from './AudioContext';
-import Visualizer from './Visualizer';
 import {CANVAS_HEIGHT, BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
 import {sampleProps} from '../../utils/audioMeasure';
 import './StreamingWave.scss';
@@ -66,7 +65,6 @@ export default class StreamingWave extends Component {
   }
 
   handleStart() {
-    // this.visualize();
     this.setupWaveform();
   }
 
@@ -81,13 +79,11 @@ export default class StreamingWave extends Component {
 
   // Render the bars
   renderBars = (bars) => {
-    const {backgroundColor, strokeColor, height} = this.props;
+    const {backgroundColor, strokeColor, height, barWidth, barGutter} = this.props;
     const {width} = this.state;
     const canvas = this.node;
     const canvasCtx = canvas.getContext('2d');
 
-    const barWidth = BAR_WIDTH;
-    const barGutter = BAR_GUTTER;
     const halfHeight = canvas.offsetHeight / 2;
 
     canvasCtx.clearRect(0, 0, width, height);
@@ -105,10 +101,8 @@ export default class StreamingWave extends Component {
 
   // Process the microphone input
   processInput = (e) => {
-    const {isRecording} = this.props;
+    const {isRecording, barWidth, barGutter} = this.props;
     const {bars, width} = this.state;
-    const barWidth = BAR_WIDTH;
-    const barGutter = BAR_GUTTER;
 
     if (isRecording) {
       const array = new Float32Array(e.inputBuffer.getChannelData(0)); //4096
@@ -138,7 +132,6 @@ export default class StreamingWave extends Component {
   render() {
     const {height} = this.props;
     const {width} = this.state;
-
     return (
       <canvas ref={node => this.node = node} height={height} width={width}></canvas>
     );
@@ -157,5 +150,7 @@ StreamingWave.defaultProps = {
   audioBitsPerSecond: 128000,
   mimeType: 'audio/mpeg',
   isRecording: false,
-  height: CANVAS_HEIGHT
+  height: CANVAS_HEIGHT,
+  barWidth: BAR_WIDTH,
+  barGutter: BAR_GUTTER
 };
