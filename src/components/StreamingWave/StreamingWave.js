@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import {MicRecorder} from './MicRecorder';
 import AudioContext from './AudioContext';
 import Visualizer from './Visualizer';
-import {CANVAS_HEIGHT} from '../../constants/CanvasConstants';
-
+import {CANVAS_HEIGHT, BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
+import {sampleProps} from '../../utils/audioMeasure';
 import './StreamingWave.scss';
 
 
@@ -12,35 +12,30 @@ export default class StreamingWave extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      analyser: null,
       micRecorder: null,
       audioCtx: null,
-      canvas: null,
-      canvasCtx: null,
-      width: null
+      width: null,
+      bars: []
     };
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
   }
 
   componentDidMount() {
-    const canvas = this.node;
-    const canvasCtx = canvas.getContext('2d');
-    const analyser = AudioContext.getAnalyser();
-
     const {audioBitsPerSecond, mimeType} = this.props;
     const options = {
       audioBitsPerSecond,
       mimeType
     };
 
+    const canvas = this.node;
+
     this.setState({
-      analyser,
       audioCtx: AudioContext,
       micRecorder: new MicRecorder(this.handleStart, this.handleStop, options),
-      canvas,
-      canvasCtx,
       width: canvas.parentNode.offsetWidth
+    }, () => {
+      this.state.micRecorder.setupRecorder();
     });
   }
 
@@ -56,6 +51,9 @@ export default class StreamingWave extends Component {
       if (micRecorder) {
         micRecorder.stopRecording();
       }
+      this.setState({
+        bars: []
+      });
     }
     if (speech.label !== this.props.speech.label) {
       this.initCanvas();
@@ -66,16 +64,10 @@ export default class StreamingWave extends Component {
     const {onStop} = this.props;
     onStop(blob);
   }
+
   handleStart() {
-    this.visualize();
-  }
-
-
-  visualize() {
-    const {backgroundColor, strokeColor, height} = this.props;
-    const {width} = this.state;
-    const {canvas, canvasCtx, audioCtx} = this.state;
-    Visualizer.visualizeStreamingWave(audioCtx, canvasCtx, canvas, width, height, backgroundColor, strokeColor);
+    // this.visualize();
+    this.setupWaveform();
   }
 
   initCanvas() {
@@ -86,6 +78,62 @@ export default class StreamingWave extends Component {
     canvasCtx.clearRect(0, 0, width, height);
     canvasCtx.fillStyle = backgroundColor;
   }
+
+  // Render the bars
+  renderBars = (bars) => {
+    const {backgroundColor, strokeColor, height} = this.props;
+    const {width} = this.state;
+    const canvas = this.node;
+    const canvasCtx = canvas.getContext('2d');
+
+    const barWidth = BAR_WIDTH;
+    const barGutter = BAR_GUTTER;
+    const halfHeight = canvas.offsetHeight / 2;
+
+    canvasCtx.clearRect(0, 0, width, height);
+    canvasCtx.fillStyle = backgroundColor;
+    canvasCtx.fillRect(0, 0, width, height);
+    canvasCtx.fillStyle = strokeColor;
+
+    window.requestAnimationFrame(() => {
+      bars.forEach((bar, i) => {
+        canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.max);
+        canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.min);
+      });
+    });
+  };
+
+  // Process the microphone input
+  processInput = (e) => {
+    const {isRecording} = this.props;
+    const {bars, width} = this.state;
+    const barWidth = BAR_WIDTH;
+    const barGutter = BAR_GUTTER;
+
+    if (isRecording) {
+      const array = new Float32Array(e.inputBuffer.getChannelData(0)); //4096
+      bars.push(sampleProps(array, 0));
+      if (bars.length <= Math.floor(width / (barWidth + barGutter))) {
+        this.renderBars(bars);
+      }
+      else {
+        this.renderBars(bars.slice(bars.length - Math.floor(width / (barWidth + barGutter))), bars.length);
+      }
+    }
+  };
+
+  // Setup the canvas to draw the waveform
+  setupWaveform = () => {
+    const {audioCtx} = this.state;
+
+    const context = audioCtx.getAudioContext();
+    const analyser = audioCtx.getAnalyser();
+    const scriptProcessor = audioCtx.getScriptProcessor();
+
+    analyser.connect(scriptProcessor);
+    scriptProcessor.connect(context.destination);
+    scriptProcessor.onaudioprocess = this.processInput;
+  };
 
   render() {
     const {height} = this.props;
@@ -106,7 +154,7 @@ StreamingWave.propTypes = {};
 StreamingWave.defaultProps = {
   backgroundColor: '#eee',
   strokeColor: '#000000',
-  audioBitsPerSecond: 48000,
+  audioBitsPerSecond: 128000,
   mimeType: 'audio/mpeg',
   isRecording: false,
   height: CANVAS_HEIGHT
