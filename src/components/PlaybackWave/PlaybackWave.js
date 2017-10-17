@@ -10,18 +10,19 @@ import {sampleProps} from '../../utils/audioMeasure';
 export default class PlaybackWave extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      width: null
-    };
+    // this.state = {
+    //   width: null
+    // };
     this.progressUpdate = this.progressUpdate.bind(this);
   }
   componentDidMount() {
     this.audio.addEventListener('timeupdate', this.progressUpdate);
-    this.setState({
-      width: this.canvas.parentNode.offsetWidth
-    }, () => {
-      this.loadWave(this.props.buffer);
-    });
+    // this.setState({
+    //   width: this.canvas.parentNode.offsetWidth
+    // }, () => {
+    //   this.loadWave(this.props.buffer);
+    // });
+    this.loadWave(this.props.buffer);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -42,18 +43,20 @@ export default class PlaybackWave extends Component {
 
   loadWave(buffer) {
     const {backgroundColor, strokeMaxColor, strokeMinColor, height, barWidth, barGutter} = this.props;
-    const width = this.props.width ? this.props.width : this.state.width;
-
+    // const width = this.props.width ? this.props.width : this.state.width;
     const canvas = this.canvas;
     const canvasCtx = canvas.getContext('2d');
     const halfHeight = canvas.offsetHeight / 2;
 
+    const data = buffer.getChannelData(0);
+    const width = Math.ceil((data.length / SAMPLE_RATE) * (BAR_WIDTH + BAR_GUTTER));
+
     canvas.width = width;
+    canvas.height = height;
 
     canvasCtx.fillStyle = backgroundColor;
     canvasCtx.fillRect(0, 0, width, height);
 
-    const data = buffer.getChannelData(0);
     const step = SAMPLE_RATE;
     for (let i = 0; i < data.length / step; i ++) {
       const bar = sampleProps(data, i, step);
@@ -97,19 +100,19 @@ export default class PlaybackWave extends Component {
   }
 
   clear() {
-    const {height} = this.props;
-    const width = this.props.width ? this.props.width : this.state.width;
     const canvas = this.canvas;
     const canvasCtx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
     canvasCtx.clearRect(0, 0, width, height);
   }
 
   render() {
-    const {height, src} = this.props;
+    const {src} = this.props;
 
     return (
       <div>
-        <canvas ref={node => this.canvas = node} height={height}></canvas>
+        <canvas ref={node => this.canvas = node}></canvas>
         <audio ref={node => this.audio = node} src={src}></audio>
       </div>
     );

@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import {SAMPLE_RATE} from '../../constants/AudioConstants';
-import {BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
-
 import './TrialsContainer.scss';
 import {getTrials, deleteTrial, selectTrial} from './actions';
 import {setUserSpeechAudio} from '../PlaylistContainer/actions';
@@ -42,12 +39,10 @@ class TrialsContainer extends Component {
   renderPlayBack() {
     const {trials} = this.props;
     if (trials.selectedTrial) {
-      const data = trials.selectedTrial.buffer.getChannelData(0);
-      const width = Math.ceil((data.length / SAMPLE_RATE) * (BAR_WIDTH + BAR_GUTTER));
       return (
         <div>
           <div className="wave-container">
-            <PlaybackWave buffer={trials.selectedTrial.buffer} src={trials.selectedTrial.blobURL} width={width} playing={this.state.playing} onEnded={this.onEnded} />
+            <PlaybackWave buffer={trials.selectedTrial.buffer} src={trials.selectedTrial.blobURL} playing={this.state.playing} onEnded={this.onEnded} />
           </div>
           <button onClick={this.handleTogglePlay}>play/pause</button>
         </div>
@@ -59,6 +54,7 @@ class TrialsContainer extends Component {
 
     return (
       <div className="aort-Trials">
+        {this.renderPlayBack()}
         <ul className="aort-TrialItem">
           {
             trials.list
@@ -117,7 +113,6 @@ class TrialsContainer extends Component {
             })
           }
         </ul>
-        {this.renderPlayBack()}
       </div>
     );
   }
