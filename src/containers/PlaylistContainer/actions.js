@@ -7,6 +7,7 @@ import uuid from 'uuid';
 export const GET_SPEECH_LIST = 'GET_SPEECH_LIST';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const SELECT_SPEECH = 'SELECT_SPEECH';
+export const CLEAR_SELECTED_SPEECH = 'CLEAR_SELECTED_SPEECH';
 
 export const SAVE_USER_SPEECHES = 'SAVE_USER_SPEECHES';
 export const GET_USER_SPEECHES = 'GET_USER_SPEECHES';
@@ -54,6 +55,12 @@ export const selectUserSpeech = speech => {
         ...content
       };
     dispatch({type: SELECT_SPEECH, speech});
+  };
+};
+
+export const clearSelectedSpeech = () => {
+  return dispatch => {
+    dispatch({type: CLEAR_SELECTED_SPEECH});
   };
 };
 

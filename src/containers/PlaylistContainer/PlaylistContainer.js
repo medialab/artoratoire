@@ -4,11 +4,8 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import './PlaylistContainer.scss';
-import {selectCategory, selectSpeech, selectUserSpeech, saveUserSpeeches, getUserSpeeches} from './actions';
+import {selectCategory, selectSpeech, selectUserSpeech, clearSelectedSpeech, saveUserSpeeches, getUserSpeeches} from './actions';
 import {selectTrial} from '../TrialsContainer/actions';
-
-import {SAMPLE_RATE} from '../../constants/AudioConstants';
-import {BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
 
 import speechList from '../../speech_list.json';
 import PlaylistSelect from '../../components/PlaylistSelect/PlaylistSelect';
@@ -25,6 +22,7 @@ class PlaylistContainer extends Component {
       playing: false,
       addNew: false
     };
+
     this.onSelectChange = this.onSelectChange.bind(this);
     this.onSpeechClick = this.onSpeechClick.bind(this);
     this.handleTogglePlay = this.handleTogglePlay.bind(this);
@@ -77,6 +75,7 @@ class PlaylistContainer extends Component {
     this.setState({
       addNew: true
     });
+    this.props.actions.clearSelectedSpeech();
   }
 
   hideNewSpeechForm () {
@@ -84,6 +83,7 @@ class PlaylistContainer extends Component {
       addNew: false
     });
   }
+
   onNewSpeechCancelled () {
     this.hideNewSpeechForm();
   }
@@ -103,12 +103,10 @@ class PlaylistContainer extends Component {
       source = selectedSpeech.blobURL;
     }
     if (selectedSpeech.buffer) {
-      const data = selectedSpeech.buffer.getChannelData(0);
-      const width = Math.ceil((data.length / SAMPLE_RATE) * (BAR_WIDTH + BAR_GUTTER));
       return (
         <div>
           <div className="wave-container">
-            <PlaybackWave src={source} buffer={selectedSpeech.buffer} playing={this.state.playing} width={width} onEnded={this.onEnded} />
+            <PlaybackWave src={source} buffer={selectedSpeech.buffer} playing={this.state.playing} onEnded={this.onEnded} />
           </div>
           <button onClick={this.handleTogglePlay}>play/pause</button>
         </div>
@@ -189,6 +187,7 @@ export default connect(
       selectCategory,
       selectSpeech,
       selectUserSpeech,
+      clearSelectedSpeech,
       saveUserSpeeches,
       getUserSpeeches,
       selectTrial
