@@ -3,7 +3,8 @@ import AudioContext from './AudioContext';
 const constraints = {audio: true, video: false}; // constraints - only audio needed
 
 export class MicRecorder {
-  constructor(onStart, onStop, options) {
+  constructor(onEnable, onStart, onStop, options) {
+    this.onEnableCallback = onEnable;
     this.onStartCallback = onStart;
     this.onStopCallback = onStop;
     this.options = options;
@@ -20,8 +21,8 @@ export class MicRecorder {
         const audioCtx = AudioContext.getAudioContext();
         const analyser = AudioContext.getAnalyser();
 
+        if (this.onEnableCallback) this.onEnableCallback();
         this.mediaRecorder = new window.MediaRecorder(stream);
-
         const source = audioCtx.createMediaStreamSource(stream);
         source.connect(analyser);
 
@@ -37,9 +38,11 @@ export class MicRecorder {
   }
 
   startRecording() {
-    this.startTime = Date.now();
-    this.mediaRecorder.start();
-    if (this.onStartCallback) this.onStartCallback();
+    if (this.mediaRecorder && this.mediaRecorder.state !== 'recording') {
+      this.startTime = Date.now();
+      this.mediaRecorder.start();
+      if (this.onStartCallback) this.onStartCallback();
+    }
   }
 
   stopRecording() {

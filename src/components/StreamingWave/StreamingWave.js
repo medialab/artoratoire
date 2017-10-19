@@ -16,6 +16,7 @@ export default class StreamingWave extends Component {
       width: null,
       bars: []
     };
+    this.handleEnable = this.handleEnable.bind(this);
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
   }
@@ -26,20 +27,15 @@ export default class StreamingWave extends Component {
       audioBitsPerSecond,
       mimeType
     };
-
-    const canvas = this.node;
-
     this.setState({
       audioCtx: AudioContext,
-      micRecorder: new MicRecorder(this.handleStart, this.handleStop, options),
-      width: canvas.parentNode.offsetWidth
-    }, () => {
-      this.state.micRecorder.setupRecorder();
+      micRecorder: new MicRecorder(this.handleEnable, this.handleStart, this.handleStop, options),
     });
+    this.initCanvas();
   }
 
   componentWillReceiveProps(nextProps) {
-    const {isRecording, speech} = nextProps;
+    const {enableRecorder, speech, isRecording} = nextProps;
     const {micRecorder} = this.state;
     if (isRecording) {
       if (micRecorder) {
@@ -50,9 +46,9 @@ export default class StreamingWave extends Component {
       if (micRecorder) {
         micRecorder.stopRecording();
       }
-      this.setState({
-        bars: []
-      });
+    }
+    if (enableRecorder !== this.props.enableRecorder) {
+      micRecorder.setupRecorder();
     }
     if (speech.label !== this.props.speech.label) {
       this.initCanvas();
@@ -62,28 +58,38 @@ export default class StreamingWave extends Component {
   handleStop(blob) {
     const {onStop} = this.props;
     onStop(blob);
+    this.setState({
+      bars: []
+    });
   }
 
   handleStart() {
     this.setupWaveform();
   }
 
+  handleEnable() {
+    const {onEnable} = this.props;
+    onEnable();
+  }
+
   initCanvas() {
     const {height, backgroundColor} = this.props;
-    const {width} = this.state;
     const canvas = this.node;
+    const width = canvas.parentNode.offsetWidth;
+    canvas.width = width;
+    canvas.height = height;
     const canvasCtx = canvas.getContext('2d');
     canvasCtx.clearRect(0, 0, width, height);
     canvasCtx.fillStyle = backgroundColor;
+    canvasCtx.fillRect(0, 0, width, height);
   }
 
   // Render the bars
   renderBars = (bars) => {
     const {backgroundColor, strokeColor, height, barWidth, barGutter} = this.props;
-    const {width} = this.state;
     const canvas = this.node;
     const canvasCtx = canvas.getContext('2d');
-
+    const width = canvas.width;
     const halfHeight = canvas.offsetHeight / 2;
 
     canvasCtx.clearRect(0, 0, width, height);
@@ -102,9 +108,11 @@ export default class StreamingWave extends Component {
   // Process the microphone input
   processInput = (e) => {
     const {isRecording, barWidth, barGutter} = this.props;
-    const {bars, width} = this.state;
+    const {bars} = this.state;
 
     if (isRecording) {
+      const canvas = this.node;
+      const width = canvas.width;
       const array = new Float32Array(e.inputBuffer.getChannelData(0)); //4096
       bars.push(sampleProps(array, 0));
       if (bars.length <= Math.floor(width / (barWidth + barGutter))) {
@@ -130,10 +138,8 @@ export default class StreamingWave extends Component {
   };
 
   render() {
-    const {height} = this.props;
-    const {width} = this.state;
     return (
-      <canvas ref={node => this.node = node} height={height} width={width}></canvas>
+      <canvas ref={node => this.node = node}></canvas>
     );
   }
 }

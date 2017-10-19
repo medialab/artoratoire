@@ -8,20 +8,36 @@ import StreamingWave from '../../components/StreamingWave/StreamingWave';
 import {saveTrial, selectTrial} from '../TrialsContainer/actions';
 import {blobToBuffer} from '../../utils/blobConverter';
 
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 class RecorderContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      enableRecorder: false,
       isRecording: false,
-      saveRecording: false
+      saveRecording: false,
+      countdown: 2
     };
   }
 
   startRecording = () => {
-    this.setState({
-      isRecording: true
-    });
+    const int = setInterval(() => {
+      if (this.state.countdown === 0) {
+        this.setState({
+          isRecording: true
+        });
+        clearInterval(int);
+        this.setState({
+          countdown: 2
+        });
+      }
+      else {
+        this.setState({
+          countdown: this.state.countdown - 1
+        });
+      }
+    }, 1000);
   }
 
   stopRecording = () => {
@@ -37,6 +53,12 @@ class RecorderContainer extends Component {
     });
   }
 
+  activeRecorder = () => {
+    this.setState({
+      enableRecorder: true
+    });
+  }
+
   onStop = (blobObject) => {
     const {saveTrial, selectTrial} = this.props.actions;
     const trialsCount = this.props.trials.list.filter((item) => {
@@ -46,8 +68,6 @@ class RecorderContainer extends Component {
     blobObject = {...blobObject, refSpeech: this.props.selectedSpeech.label};
     if (this.state.saveRecording) {
       saveTrial(blobObject, trialsCount);
-
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       blobToBuffer(blobObject.blob, data => {
         audioContext.decodeAudioData(data, function(buffer) {
           const trial = {
@@ -61,30 +81,41 @@ class RecorderContainer extends Component {
   }
 
   render() {
+    const {enableRecorder, isRecording, countdown} = this.state;
     return (
-      this.props.selectedSpeech.label ?
-        <div className="arot-RecorderContainer">
-          <div>
+      <div className="aort-RecorderContainer">
+        <StreamingWave
+          isRecording={isRecording}
+          enableRecorder={enableRecorder}
+          onEnable={this.startRecording}
+          onStop={this.onStop}
+          speech={this.props.selectedSpeech} />
+        <div className="level">
+          <div className="level-item is-centered">
             {
-              this.state.isRecording ?
-                null : <button className="button" onClick={this.startRecording}>start recording</button>
+              // this.state.isRecording ?
+              //   null :
+                <a className="level-item button circle-button is-primary is-large" onClick={enableRecorder ? this.startRecording : this.activeRecorder} disabled={isRecording}>
+                  <span className="icon is-small">
+                    {
+                      countdown === 2 ?
+                        <i className="fa fa-microphone"></i> : <i>{countdown + 1}</i>
+                    }
+                  </span>
+                </a>
             }
             {
-              this.state.isRecording ?
-                <button className="button" onClick={this.saveRecording}>stop recording</button> : null
+              isRecording ?
+                <a className="level-item button circle-button" onClick={this.saveRecording}>
+                  <span className="icon is-small">
+                    <i className="fa fa-sm fa-stop"></i>
+                  </span>
+                </a>
+                : null
             }
           </div>
-          <div>
-            <StreamingWave
-              className="oscilloscope"
-              isRecording={this.state.isRecording}
-              backgroundColor="#eee"
-              audioBitsPerSecond={128000}
-              onStop={this.onStop}
-              speech={this.props.selectedSpeech}
-              strokeColor="#000000" />
-          </div>
-        </div> : null
+        </div>
+      </div>
     );
   }
 }

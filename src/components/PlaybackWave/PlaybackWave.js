@@ -46,13 +46,14 @@ export default class PlaybackWave extends Component {
     // const width = this.props.width ? this.props.width : this.state.width;
     const canvas = this.canvas;
     const canvasCtx = canvas.getContext('2d');
-    const halfHeight = canvas.offsetHeight / 2;
 
     const data = buffer.getChannelData(0);
     const width = Math.ceil((data.length / SAMPLE_RATE) * (BAR_WIDTH + BAR_GUTTER));
 
     canvas.width = width;
     canvas.height = height;
+
+    const halfHeight = canvas.offsetHeight / 2;
 
     canvasCtx.fillStyle = backgroundColor;
     canvasCtx.fillRect(0, 0, width, height);
