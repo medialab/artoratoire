@@ -18,13 +18,13 @@ const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 // Action creators
 function getSpeechText(speech) {
-  return axios.get(`../../speech_material/${speech.file_name}.txt`);
+  return axios.get(`./speech_material/${speech.file_name}.txt`);
 }
 
 function getSpeechAudio(speech) {
   return axios({
     method: 'get',
-    url: `../../speech_material/${speech.file_name}.mp3`,
+    url: `./speech_material/${speech.file_name}.mp3`,
     responseType: 'arraybuffer'
   });
 }

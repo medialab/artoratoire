@@ -97,7 +97,7 @@ class PlaylistContainer extends Component {
     const {selectedSpeech} = this.props;
     let source;
     if (selectedSpeech.file_name) {
-      source = `../../speech_material/${selectedSpeech.file_name}.mp3`;
+      source = `./speech_material/${selectedSpeech.file_name}.mp3`;
     }
     else {
       source = selectedSpeech.blobURL;
