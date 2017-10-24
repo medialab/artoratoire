@@ -4,7 +4,8 @@
   "description": "artoratoire project",
   "main": "index.js",
   "scripts": {
-    "dev": "kotatsu serve --config ./webpack.config.js --progress --babel --public ./ ./src/main.js",
+    "build": "kotatsu build client  --config ./webpack.config.js --babel --minify ./src/main.js -o ./build/",
+    "dev": "kotatsu serve --config ./webpack.config.js --progress --babel --index ./index.html --public ./ ./src/main.js",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
