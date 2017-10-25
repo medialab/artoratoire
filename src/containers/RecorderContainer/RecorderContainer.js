@@ -17,8 +17,15 @@ class RecorderContainer extends Component {
       enableRecorder: false,
       isRecording: false,
       saveRecording: false,
-      countdown: 2
+      countdown: 2,
+      containerWidth: 960
     };
+  }
+
+  componentDidMount() {
+    this.setState({
+      containerWidth: this.container.offsetWidth
+    });
   }
 
   startRecording = () => {
@@ -68,41 +75,42 @@ class RecorderContainer extends Component {
     blobObject = {...blobObject, refSpeech: this.props.selectedSpeech.label};
     if (this.state.saveRecording) {
       saveTrial(blobObject, trialsCount);
-      blobToBuffer(blobObject.blob, data => {
-        audioContext.decodeAudioData(data, function(buffer) {
-          const trial = {
-            ...blobObject,
-            buffer
-          };
-          selectTrial(trial);
-        });
-      });
+      // blobToBuffer(blobObject.blob, data => {
+      //   audioContext.decodeAudioData(data, function(buffer) {
+      //     const trial = {
+      //       ...blobObject,
+      //       buffer
+      //     };
+      //     selectTrial(trial);
+      //   });
+      // });
     }
   }
 
   render() {
     const {enableRecorder, isRecording, countdown} = this.state;
     return (
-      <div className="aort-RecorderContainer">
+      <div ref={node=> this.container = node} className="aort-RecorderContainer">
         <StreamingWave
           isRecording={isRecording}
           enableRecorder={enableRecorder}
           onEnable={this.startRecording}
           onStop={this.onStop}
-          speech={this.props.selectedSpeech} />
+          speech={this.props.selectedSpeech}
+          width={this.state.containerWidth} />
         <div className="level">
           <div className="level-item is-centered">
             {
               // this.state.isRecording ?
               //   null :
-                <a className="level-item button circle-button is-primary is-large" onClick={enableRecorder ? this.startRecording : this.activeRecorder} disabled={isRecording}>
+                <button className="level-item button circle-button is-primary is-large" onClick={enableRecorder ? this.startRecording : this.activeRecorder} disabled={isRecording}>
                   <span className="icon is-small">
                     {
                       countdown === 2 ?
                         <i className="fa fa-microphone"></i> : <i>{countdown + 1}</i>
                     }
                   </span>
-                </a>
+                </button>
             }
             {
               isRecording ?

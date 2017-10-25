@@ -31,7 +31,6 @@ export default class StreamingWave extends Component {
       audioCtx: AudioContext,
       micRecorder: new MicRecorder(this.handleEnable, this.handleStart, this.handleStop, options),
     });
-    this.initCanvas();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,6 +54,10 @@ export default class StreamingWave extends Component {
     }
   }
 
+  componentDidUpdate() {
+    this.initCanvas();
+  }
+
   handleStop(blob) {
     const {onStop} = this.props;
     onStop(blob);
@@ -73,9 +76,8 @@ export default class StreamingWave extends Component {
   }
 
   initCanvas() {
-    const {height, backgroundColor} = this.props;
+    const {width, height, backgroundColor} = this.props;
     const canvas = this.node;
-    const width = canvas.parentNode.offsetWidth;
     canvas.width = width;
     canvas.height = height;
     const canvasCtx = canvas.getContext('2d');
@@ -156,6 +158,7 @@ StreamingWave.defaultProps = {
   audioBitsPerSecond: 128000,
   mimeType: 'audio/mpeg',
   isRecording: false,
+  width: 960,
   height: CANVAS_HEIGHT,
   barWidth: BAR_WIDTH,
   barGutter: BAR_GUTTER
