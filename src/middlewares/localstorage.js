@@ -51,11 +51,8 @@ export default function localStorageMiddleware({dispatch, getState}) {
 
     if (action.type === GET_TRIALS) {
       try {
-        const trials = JSON.parse(localStorage.getItem('trials'));
-        if (trials !== null) {
-          const list = trials.sort((a, b) => {
-            return b.startTime - a.startTime;
-          });
+        const list = JSON.parse(localStorage.getItem('trials'));
+        if (list !== null) {
           dispatch({type: INIT_TRIALS, list});
         }
       }

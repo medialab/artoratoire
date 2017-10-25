@@ -7,7 +7,8 @@ import './TrialsContainer.scss';
 import {getTrials, deleteTrial, selectTrial} from './actions';
 import {setUserSpeechAudio} from '../PlaylistContainer/actions';
 import {dataURLtoBlob, blobToBuffer} from '../../utils/blobConverter';
-import PlaybackWave from '../../components/PlaybackWave/PlaybackWave';
+import TrialItem from '../../components/TrialItem/TrialItem';
+import PlaybackBox from '../../components/PlaybackBox/PlaybackBox';
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -15,14 +16,39 @@ class TrialsContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      playing: false
+      playing: false,
+      trialItems: []
     };
     this.handleTogglePlay = this.handleTogglePlay.bind(this);
-    this.onEnded = this.onEnded.bind(this);
+    this.handleEnded = this.handleEnded.bind(this);
   }
 
   componentDidMount() {
     this.props.actions.getTrials();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {trials} = nextProps;
+    if (trials.list.length > 0) {
+      const items = [];
+      trials.list.map((item) => {
+        const blob = dataURLtoBlob(item.dataUrl);
+        blobToBuffer(blob, data => {
+          audioContext.decodeAudioData(data, (buffer) => {
+            item = {
+              ...item,
+              blobURL: window.URL.createObjectURL(blob),
+              buffer
+            };
+            items.push(item);
+
+            this.setState({
+              trialItems: items
+            });
+          });
+        });
+      });
+    }
   }
 
   handleTogglePlay() {
@@ -30,7 +56,7 @@ class TrialsContainer extends Component {
       playing: !this.state.playing
     });
   }
-  onEnded () {
+  handleEnded () {
     this.setState({
       playing: false
     });
@@ -40,74 +66,41 @@ class TrialsContainer extends Component {
     const {trials} = this.props;
     if (trials.selectedTrial) {
       return (
-        <div>
-          <div className="wave-container">
-            <PlaybackWave buffer={trials.selectedTrial.buffer} src={trials.selectedTrial.blobURL} playing={this.state.playing} onEnded={this.onEnded} />
-          </div>
-          <button onClick={this.handleTogglePlay}>play/pause</button>
-        </div>
+        <PlaybackBox speech={trials.selectedTrial} source={trials.selectedTrial.blobURL} playing={this.state.playing} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} />
       );
     }
   }
   render() {
-    const {trials, selectedSpeech} = this.props;
+    const {trials, selectedSpeech, selectedCategory} = this.props;
+    const {trialItems} = this.state;
 
     return (
       <div className="aort-Trials">
         {this.renderPlayBack()}
-        <ul className="aort-TrialItem">
+        <ul>
           {
-            trials.list
+            trialItems
             .filter((item) => {
               return item.refSpeech === selectedSpeech.label;
             })
+            .sort((a, b) => {
+              return b.startTime - a.startTime;
+            })
             .map((item, i) => {
-              const {selectTrial, setUserSpeechAudio} = this.props.actions;
-              const {selectedCategory, selectedSpeech} = this.props;
-              const selectItem = () => {
-                const blob = dataURLtoBlob(item.dataUrl);
-                blobToBuffer(blob, data => {
-                  audioContext.decodeAudioData(data, function(buffer) {
-                    item = {
-                      ...item,
-                      blobURL: window.URL.createObjectURL(blob),
-                      buffer
-                    };
-                    selectTrial(item);
-                  });
-                });
+              const handleSelectTrial = () => this.props.actions.selectTrial(item);
+              const handleSelectRef = () => {
+                item = {
+                  trialId: item.id,
+                  buffer: item.buffer,
+                  blobURL: item.blobURL
+                };
+                this.props.actions.setUserSpeechAudio(selectedSpeech, item);
               };
 
-              const selectItemAsRef = () => {
-                const blob = dataURLtoBlob(item.dataUrl);
-                blobToBuffer(blob, data => {
-                  audioContext.decodeAudioData(data, function(buffer) {
-                    item = {
-                      trialId: item.id,
-                      blobURL: window.URL.createObjectURL(blob),
-                      buffer
-                    };
-                    setUserSpeechAudio(selectedSpeech, item);
-                  });
-                });
-              };
-
-              const deleteItem = () => this.props.actions.deleteTrial(item);
+              const handleDeleteTrial = () => this.props.actions.deleteTrial(item);
               return (
-                <li key={i}>
-                  <span>{item.title}</span>
-                  {
-                    selectedCategory.value === 'mySpeeches' && selectedSpeech.trialId !== item.id ?
-                      <button onClick={selectItemAsRef}>select as reference</button> : null
-                  }
-                  {
-                    selectedSpeech.trialId !== item.id ?
-                      <span>
-                        <button onClick={selectItem}>compare trial to speech</button>
-                        <button onClick={deleteItem}>delete</button>
-                      </span> : null
-                  }
-
+                <li key={i} className="container">
+                  <TrialItem item={item} index={i} speech={selectedSpeech} selectedItem={trials.selectedTrial} category={selectedCategory} onSelectTrial={handleSelectTrial} onSelectRef={handleSelectRef} onDeleteTrial={handleDeleteTrial} />
                 </li>
               );
             })

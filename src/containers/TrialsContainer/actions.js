@@ -21,7 +21,7 @@ export function saveTrial(trial, count) {
     blobToDataURL(trial.blob, dataUrl => {
       trial = {...trial,
         dataUrl,
-        title: `Trial #${count + 1}`,
+        label: `Trial #${count + 1}`,
         id
       };
       dispatch({type: SAVE_TRIAL, trial});
