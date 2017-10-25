@@ -24,6 +24,7 @@
     "bulma": "^0.5.2",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
+    "moment": "^2.19.1",
     "normalize.css": "^7.0.0",
     "phonogram": "^0.2.0",
     "react": "^15.6.1",

@@ -9,7 +9,6 @@ import PlaylistContainer from '../PlaylistContainer/PlaylistContainer';
 import RecorderContainer from '../RecorderContainer/RecorderContainer';
 import TrialsContainer from '../TrialsContainer/TrialsContainer';
 
-
 const App = ({
   lang,
   selectedSpeech,
@@ -19,7 +18,7 @@ const App = ({
     <div className="aort-App">
       <Header lang={lang} setLanguage={actions.setLanguage} />
       <div>
-        <section className="content" >
+        <section>
           <PlaylistContainer />
         </section>
         {

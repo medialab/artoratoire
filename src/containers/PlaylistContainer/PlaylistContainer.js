@@ -12,7 +12,7 @@ import PlaylistSelect from '../../components/PlaylistSelect/PlaylistSelect';
 import PlaylistItems from '../../components/PlaylistItems/PlaylistItems';
 import SpeechContent from '../../components/SpeechContent/SpeechContent';
 import SpeechSummary from '../../components/SpeechSummary/SpeechSummary';
-import PlaybackWave from '../../components/PlaybackWave/PlaybackWave';
+import PlaybackBox from '../../components/PlaybackBox/PlaybackBox';
 import NewSpeechForm from '../../components/NewSpeechForm/NewSpeechForm';
 
 class PlaylistContainer extends Component {
@@ -26,7 +26,7 @@ class PlaylistContainer extends Component {
     this.onSelectChange = this.onSelectChange.bind(this);
     this.onSpeechClick = this.onSpeechClick.bind(this);
     this.handleTogglePlay = this.handleTogglePlay.bind(this);
-    this.onEnded = this.onEnded.bind(this);
+    this.handleEnded = this.handleEnded.bind(this);
     this.showNewSpeechForm = this.showNewSpeechForm.bind(this);
     this.onNewSpeechSaved = this.onNewSpeechSaved.bind(this);
     this.onNewSpeechCancelled = this.onNewSpeechCancelled.bind(this);
@@ -65,7 +65,8 @@ class PlaylistContainer extends Component {
       playing: !this.state.playing
     });
   }
-  onEnded () {
+
+  handleEnded () {
     this.setState({
       playing: false
     });
@@ -104,12 +105,7 @@ class PlaylistContainer extends Component {
     }
     if (selectedSpeech.buffer) {
       return (
-        <div>
-          <div className="wave-container">
-            <PlaybackWave src={source} buffer={selectedSpeech.buffer} playing={this.state.playing} onEnded={this.onEnded} />
-          </div>
-          <button onClick={this.handleTogglePlay}>play/pause</button>
-        </div>
+        <PlaybackBox source={source} speech={selectedSpeech} playing={this.state.playing} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} />
       );
     }
   }

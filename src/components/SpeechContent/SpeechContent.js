@@ -4,7 +4,7 @@ import './SpeechContent.scss';
 
 const SpeechContent = ({speech}) => {
   return (
-    <div className="aort-SpeechContent">
+    <div className="aort-SpeechContent content">
       {speech.content ?
         <div>
           <blockquote>
