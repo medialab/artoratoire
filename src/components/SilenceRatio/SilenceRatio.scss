@@ -1,0 +1,15 @@
+@import  '../../../styles/variables.scss';
+
+.silence-ratio {
+  width: 200px;
+  .speaking {
+    display: inline-block;
+    height: 10px;
+    background-color: $light-red;
+  }
+  .silence {
+    display: inline-block;
+    height: 10px;
+    background-color: $light-blue;
+  }
+}

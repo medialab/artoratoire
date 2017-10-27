@@ -8,9 +8,13 @@
 @import "~bulma/sass/utilities/initial-variables";
 
 // own initial variables
-$blue: #51aae8;
+// $blue: #51aae8;
+$red: #ff3333;
+$blue: #376FF4;
+$light-red: #FFB7B7;
+$light-blue: #7f9fec;
 $family-serif: "Libre Baskerville";
-
+$footer-background-color: $white;
 // derived variables
 $primary: $blue;
 

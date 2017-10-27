@@ -1,7 +1,7 @@
-import {MIN_BUFFER, THRESHOLD, SAMPLE_RATE} from '../constants/AudioConstants';
+import {SEC_BUFFER, THRESHOLD, SAMPLE_RATE, MIN_DURATION} from '../constants/AudioConstants';
 
-export function silenceCount(buffer, threshold = THRESHOLD, durationMin = 0.1) {
-  const dMin = MIN_BUFFER * durationMin;
+export function silenceCount(buffer, threshold = THRESHOLD, dMin = MIN_DURATION) {
+  dMin = SEC_BUFFER * dMin;
 
   const silenceBuffer = [];
 
@@ -16,7 +16,7 @@ export function silenceCount(buffer, threshold = THRESHOLD, durationMin = 0.1) {
       silenceBuffer.push(item.length);
   });
   const count = silenceBuffer.reduce((a, b) => a + b, 0);
-  return count / MIN_BUFFER;
+  return count / SEC_BUFFER;
 }
 
 export function sampleProps(data, index, sampleRate = SAMPLE_RATE) {
@@ -43,7 +43,28 @@ export function silenceRmsCount(data, threshold = THRESHOLD, step = SAMPLE_RATE)
   let count = 0;
   for (let i = 0; i < data.length / step; i ++) {
     const bar = sampleProps(data, i, step);
-    if (bar.rms > threshold) count++;
+    if (bar.rms < threshold) count++;
   }
-  return count * step / MIN_BUFFER;
+
+  return count * step / SEC_BUFFER;
+}
+
+export function normalizedBuffer(data, threshold = THRESHOLD, dMin = MIN_DURATION) {
+  const buffer = [];
+  const step = dMin * SEC_BUFFER;
+  for (let i = 0; i < data.length / step; i ++) {
+    const bar = sampleProps(data, i, step);
+    if (bar.rms < threshold) buffer.push(0);
+    else buffer.push(1);
+  }
+  const groupBuffer = buffer.join('').match(/([0-9])\1*/g) || [];
+  const normBuffer = groupBuffer.map((d, i) => {
+    return {
+      index: i,
+      duration: d.length * dMin,
+      status: d[0] === '0' ? 'silence' : 'speaking'
+    };
+  });
+
+  return normBuffer;
 }
