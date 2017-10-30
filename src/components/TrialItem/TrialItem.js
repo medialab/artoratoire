@@ -20,7 +20,6 @@ const TrialItem = ({
 
   const startTime = moment(item.startTime).format('MMMM DD YYYY, h:mm a');
   const duration = durationFormat(item.buffer.duration * 1000);
-
   return (
     <div className="aort-TrialItem level">
       <div className="level-left">

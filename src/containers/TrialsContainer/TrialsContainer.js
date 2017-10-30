@@ -16,7 +16,8 @@ class TrialsContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      playing: false,
+      isPlaying: false,
+      isEnded: false,
       trialItems: []
     };
     this.handleTogglePlay = this.handleTogglePlay.bind(this);
@@ -53,12 +54,14 @@ class TrialsContainer extends Component {
 
   handleTogglePlay() {
     this.setState({
-      playing: !this.state.playing
+      isPlaying: !this.state.isPlaying,
+      isEnded: false
     });
   }
   handleEnded () {
     this.setState({
-      playing: false
+      isPlaying: false,
+      isEnded: true
     });
   }
 
@@ -66,7 +69,7 @@ class TrialsContainer extends Component {
     const {trials} = this.props;
     if (trials.selectedTrial) {
       return (
-        <PlaybackBox speech={trials.selectedTrial} source={trials.selectedTrial.blobURL} playing={this.state.playing} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} />
+        <PlaybackBox speech={trials.selectedTrial} source={trials.selectedTrial.blobURL} isPlaying={this.state.isPlaying} isEnded={this.state.isEnded} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} />
       );
     }
   }

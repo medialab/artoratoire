@@ -14,12 +14,14 @@ import SpeechContent from '../../components/SpeechContent/SpeechContent';
 import SpeechSummary from '../../components/SpeechSummary/SpeechSummary';
 import PlaybackBox from '../../components/PlaybackBox/PlaybackBox';
 import NewSpeechForm from '../../components/NewSpeechForm/NewSpeechForm';
+import SilenceRatio from '../../components/SilenceRatio/SilenceRatio';
 
 class PlaylistContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      playing: false,
+      isPlaying: false,
+      isEnded: false,
       addNew: false
     };
 
@@ -42,6 +44,7 @@ class PlaylistContainer extends Component {
       this.props.actions.selectTrial(null);
     }
     this.setState({
+      isPlaying: false,
       addNew: false
     });
   }
@@ -56,19 +59,22 @@ class PlaylistContainer extends Component {
       this.props.actions.selectTrial(null);
     }
     this.setState({
+      isPlaying: false,
       addNew: false
     });
   }
 
   handleTogglePlay() {
     this.setState({
-      playing: !this.state.playing
+      isPlaying: !this.state.isPlaying,
+      isEnded: false
     });
   }
 
   handleEnded () {
     this.setState({
-      playing: false
+      isPlaying: false,
+      isEnded: true
     });
   }
 
@@ -105,7 +111,7 @@ class PlaylistContainer extends Component {
     }
     if (selectedSpeech.buffer) {
       return (
-        <PlaybackBox source={source} speech={selectedSpeech} playing={this.state.playing} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} />
+        <PlaybackBox source={source} speech={selectedSpeech} isPlaying={this.state.isPlaying} isEnded={this.state.isEnded} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} />
       );
     }
   }
@@ -156,8 +162,14 @@ class PlaylistContainer extends Component {
         </div>
         <div>
           {
-            selectedSpeech.content && !this.state.addNew ?
-              <SpeechSummary speech={selectedSpeech} trial={selectedTrial} /> : null
+            // selectedSpeech.content && !this.state.addNew ?
+            //   <SpeechSummary speech={selectedSpeech} trial={selectedTrial} /> : null
+          }
+        </div>
+        <div>
+          {
+            selectedSpeech.content && selectedSpeech.buffer && !this.state.addNew ?
+              <SilenceRatio buffer={selectedSpeech.buffer} index={0} /> : null
           }
         </div>
         {this.renderPlayBack()}
