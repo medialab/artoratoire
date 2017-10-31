@@ -31,10 +31,11 @@ export default class StreamingWave extends Component {
       audioCtx: AudioContext,
       micRecorder: new MicRecorder(this.handleEnable, this.handleStart, this.handleStop, options),
     });
+    this.initCanvas();
   }
 
   componentWillReceiveProps(nextProps) {
-    const {enableRecorder, speech, isRecording} = nextProps;
+    const {enableRecorder, isRecording} = nextProps;
     const {micRecorder} = this.state;
     if (isRecording) {
       if (micRecorder) {
@@ -49,9 +50,12 @@ export default class StreamingWave extends Component {
     if (enableRecorder !== this.props.enableRecorder) {
       micRecorder.setupRecorder();
     }
-    if (speech.label !== this.props.speech.label) {
-      this.initCanvas();
-    }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const {speech, width} = nextProps;
+    return speech.label !== this.props.speech.label ||
+      width !== this.props.width;
   }
 
   componentDidUpdate() {
@@ -111,7 +115,6 @@ export default class StreamingWave extends Component {
   processInput = (e) => {
     const {isRecording, barWidth, barGutter} = this.props;
     const {bars} = this.state;
-
     if (isRecording) {
       const canvas = this.node;
       const width = canvas.width;

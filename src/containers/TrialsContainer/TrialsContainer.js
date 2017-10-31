@@ -30,25 +30,33 @@ class TrialsContainer extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {trials} = nextProps;
-    if (trials.list.length > 0) {
-      const items = [];
-      trials.list.map((item) => {
-        const blob = dataURLtoBlob(item.dataUrl);
-        blobToBuffer(blob, data => {
-          audioContext.decodeAudioData(data, (buffer) => {
-            item = {
-              ...item,
-              blobURL: window.URL.createObjectURL(blob),
-              buffer
-            };
-            items.push(item);
+    if (trials.list.length !== this.props.trials.list.length) {
+      if (trials.list.length > 0) {
+        const items = [];
 
-            this.setState({
-              trialItems: items
+        trials.list.map((item) => {
+          const blob = dataURLtoBlob(item.dataUrl);
+          blobToBuffer(blob, data => {
+            audioContext.decodeAudioData(data, (buffer) => {
+              item = {
+                ...item,
+                blobURL: window.URL.createObjectURL(blob),
+                buffer
+              };
+              items.push(item);
+
+              this.setState({
+                trialItems: items
+              });
             });
           });
         });
-      });
+      }
+      else {
+        this.setState({
+          trialItems: []
+        });
+      }
     }
   }
 
@@ -80,6 +88,19 @@ class TrialsContainer extends Component {
     return (
       <div className="aort-Trials">
         {this.renderPlayBack()}
+        {
+          trialItems
+          .filter((item) => {
+            return item.refSpeech === selectedSpeech.label;
+          }).length === 0 ?
+            <div className="container">
+              <div className="columns is-centered">
+                <div className="column is-one-quarter has-text-centered notification">
+                  You don't have any trials, go recording first.
+                </div>
+              </div>
+            </div> : null
+        }
         <ul>
           {
             trialItems
