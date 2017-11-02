@@ -3,5 +3,10 @@
   "step-one": "Step One",
   "step-two": "Step Two",
   "select-playlist": "Select a playlist...",
-  "subtitle": "How to succeed as a public speaker?"
+  "subtitle": "How to become a great public speaker?",
+  "intro-first": "To become a great orator, the first step you need to take is to master the speech and silence distributions. « Art oratoire » is a training tool developed by the Forccast program to help you improve your speech delivery skills. It will specifically help you focus on where to insert pauses and for how long as you are speaking.",
+  "intro-second": "You will be able to",
+  "intro-step-one": "listen to and visualise the speeches originally delivered by great 20th century orators by selecting them from the playlist,",
+  "intro-step-two": "record your voice and work on your delivery by comparing your trials to the original recordings,",
+  "intro-step-three": "import your own speeches for your own use."
 }

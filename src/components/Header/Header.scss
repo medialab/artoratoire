@@ -1,20 +1,6 @@
 @import '../../../styles/variables';
 .aort-Header {
-  margin: $gap;
-  // height: 150px;
-  // width: 100%;
-  overflow: hidden;
-  // position: fixed;
-  z-index: 999;
-  -webkit-transition: height 0.3s;
-  -moz-transition: height 0.3s;
-  -ms-transition: height 0.3s;
-  -o-transition: height 0.3s;
-  transition: height 0.3s;
-  &.smaller {
-    height: 75px;
-    h1 {
-      font-size: 20px;
-    }
+  .link-down {
+    margin-top: 1.5rem;
   }
 }

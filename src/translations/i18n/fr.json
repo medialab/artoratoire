@@ -3,5 +3,10 @@
   "step-one": "Première étape",
   "step-two": "Deuxième étape",
   "select-playlist": "Sélectionnez une playlist ...",
-  "subtitle": "(need french)"
+  "subtitle": "Comment devenir un grand orateur?",
+  "intro-first": "Pour être un grand orateur, il faut d’abord maîtriser la répartition de la parole et des silences. « Art oratoire » est un outil développé par le programme Forccast pour vous permettre d’améliorer vos compétences d’orateur. Vous saurez où placer et pour combien de temps les silences à mesure que vous parlez.",
+  "intro-second": "Vous pourrez",
+  "intro-step-one": "écouter et visualiser les discours des grands orateurs en les sélectionnant dans la playlist,",
+  "intro-step-two": "enregistrez votre voix et travaillez sur votre débit en vous comparant aux grands orateurs,",
+  "intro-step-three": "importer vos propres discours pour votre propre usage."
 }

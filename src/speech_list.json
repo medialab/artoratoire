@@ -1,109 +1,98 @@
 [
   {
-    "label": "Présidents",
-    "value": "president",
+    "label": "French",
+    "value": "french",
     "list": [
       {
-        "label": "Charles de Gaulle",
+        "label": "1968-C. de Gaulle-Vœux",
         "file_name": "de Gaulle",
         "lang": "fr"
       },
       {
-        "label": "Georges Pompidou",
+        "label": "1970-G. Pompidou- Vœux",
         "file_name": "Pompidou",
         "lang": "fr"
       },
       {
-        "label": "François Mitterrand",
+        "label": "1981-F. Mitterrand- Vœux",
         "file_name": "Mitterrand",
         "lang": "fr"
       },
       {
-        "label": "Jacques Chirac",
+        "label": "1995-F. Mitterrand-Discours Europe",
+        "file_name": "MitterandEurope",
+        "lang": "fr"
+      },
+      {
+        "label": "1996-J. Chirac- Vœux",
         "file_name": "Chirac",
         "lang": "fr"
       },
       {
-        "label": "Nicolas Sarkozy",
+        "label": "2012-N. Sarkozy- Vœux",
         "file_name": "Sarkozy",
         "lang": "fr"
       },
       {
-        "label": "François Hollande",
-        "file_name": "Hollande",
-        "lang": "fr"
-      }
-    ]
-  },
-  {
-    "label": "Christiane Taubira",
-    "value": "christiane",
-    "list": [
-      {
-        "label": "Réponse à E. Cioti",
-        "file_name": "Cioti",
-        "lang": "fr"
-      },
-      {
-        "label": "Vote Mariage pour tous",
-        "file_name": "VoteMariage",
-        "lang": "fr"
-      },
-      {
-        "label": "Défense Mariage pour tous",
+        "label": "2012-C. Taubira-Mariage pour tous",
         "file_name": "MariagePourTous",
         "lang": "fr"
       },
       {
-        "label": "Tirade",
+        "label": "2013-C. Taubira-Mariage pour tous",
+        "file_name": "VoteMariage",
+        "lang": "fr"
+      },
+      {
+        "label": "2013-C. Taubira-Tirade",
         "file_name": "Misogynie",
+        "lang": "fr"
+      },
+      {
+        "label": "2014-François Hollande-Voeux",
+        "file_name": "Hollande",
+        "lang": "fr"
+      },
+      {
+        "label": "2014-J.-L. Mélenchon-Clôture Université d’été",
+        "file_name": "Melenchon",
+        "lang": "fr"
+      },
+      {
+        "label": "2015-C. Taubira-Réponse à E. Ciotti",
+        "file_name": "Cioti",
+        "lang": "fr"
+      },
+      {
+        "label": "2016-B. Cazeneuve-LCI",
+        "file_name": "Cazeneuve",
         "lang": "fr"
       }
     ]
   },
   {
-    "label": "President Obama",
-    "value": "president_obama",
+    "label": "English",
+    "value": "english",
     "list": [
       {
-        "label": "Climate",
+        "label": "2015-Barack Obama on Climate",
         "file_name": "ObamaClimate",
         "lang": "en"
       },
       {
-        "label": "Democracy",
-        "file_name": "ObamaDemocracy",
-        "lang": "en"
-      },
-      {
-        "label": "Union",
+        "label": "2015-Barack Obama on Union",
         "file_name": "Obama-Intro Union",
         "lang": "en"
       },
       {
-        "label": "Regrets",
+        "label": "2015-Barack Obama on Regrets",
         "file_name": "ObamaRegrets",
         "lang": "en"
-      }
-    ]
-  },
-  { "label": "Divers",
-    "value": "divers",
-    "list": [
-      {
-        "label": "Jean-Luc Mélenchon",
-        "file_name": "Melenchon",
-        "lang": "fr"
       },
       {
-        "label": "Bernard Cazeneuve",
-        "file_name": "Cazeneuve",
-        "lang": "fr"
-      },
-      {
-        "label": "François Mitterand - discours Europe 1995",
-        "file_name": "MitterandEurope",
-        "lang": "fr"
+        "label": "2016-Barack Obama on Democracy",
+        "file_name": "ObamaDemocracy",
+        "lang": "en"
       }
     ]
   }
