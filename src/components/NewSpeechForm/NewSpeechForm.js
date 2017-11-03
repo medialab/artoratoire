@@ -54,17 +54,21 @@ class NewSpeechForm extends Component {
           <div className="control">
             <label className="label">Languange of the Speech</label>
             <select value={lang} name="lang" onChange={this.handleChange}>
-              <option value="en">En</option>
-              <option value="fr">Fr</option>
+              <option value="en">en</option>
+              <option value="fr">fr</option>
             </select>
           </div>
         </div>
-        <div className="field is-grouped">
-          <div className="control">
-            <button className="button" onClick={this.handleCancel}>Cancel</button>
-          </div>
-          <div className="control">
-            <button type="submit" className="button is-primary">Save</button>
+        <div className="levels">
+          <div className="level-right">
+            <div className="field is-grouped">
+              <div className="control">
+                <button className="button" onClick={this.handleCancel}>Cancel</button>
+              </div>
+              <div className="control">
+                <button type="submit" className="button is-primary">Save</button>
+              </div>
+            </div>
           </div>
         </div>
       </form>

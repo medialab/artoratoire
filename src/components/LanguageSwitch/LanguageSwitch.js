@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './LanguageSwitch.scss';
 
-const LanguageSwitch = ({lang, setLanguage}) => {
+const LanguageSwitch = ({className, lang, setLanguage}) => {
   const onClick = e => {
     e.stopPropagation();
     if (lang === 'en') {
@@ -15,7 +15,7 @@ const LanguageSwitch = ({lang, setLanguage}) => {
   };
   return (
     <div className="aort-LanguageSwitch">
-      <button className="button is-white" onClick={onClick}>
+      <button className={`button ${className}`} onClick={onClick}>
         <span className={lang === 'en' ? 'active' : ''}>en</span>/<span className={lang === 'fr' ? 'active' : ''}>fr</span>
       </button>
     </div>

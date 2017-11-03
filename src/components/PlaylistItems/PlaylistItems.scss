@@ -1,21 +1,24 @@
 @import '../../../styles/variables';
 
 .aort-PlaylistItems {
+  overflow-y: auto;
+  max-height: 210px;
   list-style: none;
   margin: 0 !important;
   padding: 5px 0 0 5px !important;
+
   li {
     list-style: none;
     cursor: pointer;
     margin-top: 10px;
     margin-bottom: 0 !important;
-    // white-space: nowrap;
+
     &:hover {
       background-color: $active-background;
     }
     &.active {
       background: $active-background;
-      font-weight: $weight-semibold; 
+      font-weight: $weight-semibold;
     }
   }
 }

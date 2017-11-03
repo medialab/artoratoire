@@ -19,13 +19,8 @@ const PlaylistItems = ({
           };
 
           return (
-            <li className={'level ' + (selectedItem === item.label ? 'active' : '')} onClick={onItemClick} key={i}>
-              <span className="level-left">{item.label}</span>
-              {/*<a className="level-right">
-                <span className="icon is-small">
-                  <i className="fa fa-play"></i>
-                </span>
-              </a>*/}
+            <li className={selectedItem === item.label ? 'active' : ''} onClick={onItemClick} key={i}>
+              <span>{item.label}</span>
             </li>
           );
         })
