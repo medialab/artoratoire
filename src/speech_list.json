@@ -1,7 +1,7 @@
 [
   {
-    "label": "French",
-    "value": "french",
+    "label": "Francais",
+    "value": "fr",
     "list": [
       {
         "label": "1968-C. de Gaulle-Vœux",
@@ -72,7 +72,7 @@
   },
   {
     "label": "English",
-    "value": "english",
+    "value": "en",
     "list": [
       {
         "label": "2015-Barack Obama on Climate",

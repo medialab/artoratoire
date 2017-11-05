@@ -1,14 +1,36 @@
 @import '../../../styles/variables';
 
 .aort-SpeechContent {
-  p {
+  blockquote {
+    overflow-y: auto;
+    height: 250px;
+    // display: flex;
+    // flex-direction: column;
+  }
+  .content-body {
     white-space: pre-line;
+    // flex-grow: 1;
   }
   a {
     border-bottom: 1px dashed;
     // &:hover {
     //   border-bottom: 1px dashed;
     // }
+  }
+  .source {
+    width: 50%;
+  }
+  .content-footer {
+    align-items: center;
+    .column {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+  .table {
+    width: 1%;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
 }

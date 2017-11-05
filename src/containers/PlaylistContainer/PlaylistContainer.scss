@@ -1,3 +1,8 @@
-.aort-Playlist {
+@import  '../../../styles/variables.scss';
 
+.aort-Playlist {
+  .add-wrapper {
+    font-family: $family-elements;
+    margin-top: 5px;
+  }
 }

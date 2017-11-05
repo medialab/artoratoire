@@ -22,6 +22,8 @@ class TrialsContainer extends Component {
     };
     this.handleTogglePlay = this.handleTogglePlay.bind(this);
     this.handleEnded = this.handleEnded.bind(this);
+    this.activateTab = this.activateTab.bind(this);
+
   }
 
   componentDidMount() {
@@ -73,6 +75,10 @@ class TrialsContainer extends Component {
     });
   }
 
+  activateTab () {
+    this.props.onTabSelect(0);
+  }
+
   renderPlayBack() {
     const {trials} = this.props;
     if (trials.selectedTrial) {
@@ -96,7 +102,7 @@ class TrialsContainer extends Component {
             <div className="container">
               <div className="columns is-centered">
                 <div className="column is-one-quarter has-text-centered notification">
-                  You don't have any trials, go recording first.
+                  You don't have any trials, please make a <a onClick={this.activateTab} className="has-text-primary">Recording</a> first.
                 </div>
               </div>
             </div> : null

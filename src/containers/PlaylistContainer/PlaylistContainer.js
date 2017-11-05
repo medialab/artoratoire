@@ -32,6 +32,7 @@ class PlaylistContainer extends Component {
     this.showNewSpeechForm = this.showNewSpeechForm.bind(this);
     this.onNewSpeechSaved = this.onNewSpeechSaved.bind(this);
     this.onNewSpeechCancelled = this.onNewSpeechCancelled.bind(this);
+    this.activateTab = this.activateTab.bind(this);
   }
 
   componentDidMount () {
@@ -43,6 +44,7 @@ class PlaylistContainer extends Component {
       this.props.actions.selectCategory(category);
       this.props.actions.selectTrial(null);
     }
+    this.props.onTabSelect(0);
     this.setState({
       isPlaying: false,
       addNew: false
@@ -100,6 +102,10 @@ class PlaylistContainer extends Component {
     this.hideNewSpeechForm();
   }
 
+  activateTab () {
+    this.props.onTabSelect(1);
+  }
+
   renderPlayBack() {
     const {selectedSpeech} = this.props;
     let source;
@@ -127,39 +133,55 @@ class PlaylistContainer extends Component {
     return (
       <div className="aort-Playlist container">
         <div className="columns">
-          <div className="column is-3">
-            {
-              !this.state.addNew ?
-                <div>
-                  <PlaylistSelect
-                    selectedOption={selectedCategory.value}
-                    options={options}
-                    placeholder={translate('select-playlist')}
-                    onChange={this.onSelectChange} />
-                  {
-                    selectedCategory.list ?
-                      <PlaylistItems onClick={this.onSpeechClick} items={selectedCategory.list} selectedItem={selectedSpeech.label} /> : null
-                  }
-                  {
-                    selectedCategory.list ? null : <span>or </span>
-                  }
-                  <div>
-                    <button className="button" onClick={this.showNewSpeechForm}>Add a speech</button>
+          {
+            !this.state.addNew ?
+              <div className="column is-3">
+                <PlaylistSelect
+                  selectedOption={selectedCategory.value}
+                  options={options}
+                  placeholder={translate('select-playlist')}
+                  onChange={this.onSelectChange} />
+                {
+                  selectedCategory.list ?
+                    <PlaylistItems onClick={this.onSpeechClick} items={selectedCategory.list} selectedItem={selectedSpeech.label} /> : null
+                }
+                  <div className="level add-wrapper">
+                    <div className="level-left"></div>
+                    <div className="level-right">
+                      <div className="level-item">
+                        {
+                          selectedCategory.list ? null : <span>or&nbsp;</span>
+                        }
+                        <a className="button" onClick={this.showNewSpeechForm}>Add a speech</a>
+                      </div>
+                    </div>
                   </div>
-                </div> : null
-            }
-          </div>
-          <div className="column">
-            {
-              selectedSpeech.content && !this.state.addNew ?
-                <SpeechContent speech={selectedSpeech} /> : null
-            }
-            {
-              this.state.addNew ?
-                <NewSpeechForm speech={this.state.newSpeech} onSave={this.onNewSpeechSaved} onCancel={this.onNewSpeechCancelled} /> : null
-            }
-          </div>
+              </div> : null
+          }
+          {
+            selectedSpeech.content && !this.state.addNew ?
+              <div className="column">
+                <SpeechContent speech={selectedSpeech} />
+              </div> : null
+
+          }
+          {
+            this.state.addNew ?
+              <div className="column is-half  is-offset-one-quarter">
+                <NewSpeechForm speech={this.state.newSpeech} onSave={this.onNewSpeechSaved} onCancel={this.onNewSpeechCancelled} />
+              </div> : null
+          }
         </div>
+        {
+          selectedCategory.value === 'mySpeeches' && !selectedSpeech.trialId ?
+            <div className="columns is-centered">
+              <div className="column is-one-quarter has-text-centered notification">
+                <span>
+                  You didn't select a trial as the reference, pick one in <a onClick={this.activateTab} className="has-text-primary">Trials</a>.
+                </span>
+              </div>
+            </div> : null
+        }
         <div>
           {
             // selectedSpeech.content && !this.state.addNew ?
@@ -168,8 +190,8 @@ class PlaylistContainer extends Component {
         </div>
         <div>
           {
-            selectedSpeech.content && selectedSpeech.buffer && !this.state.addNew ?
-              <SilenceRatio buffer={selectedSpeech.buffer} index={0} /> : null
+            // selectedSpeech.content && selectedSpeech.buffer && !this.state.addNew ?
+            //   <SilenceRatio buffer={selectedSpeech.buffer} index={0} /> : null
           }
         </div>
         {this.renderPlayBack()}
