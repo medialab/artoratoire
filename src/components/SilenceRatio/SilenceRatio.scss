@@ -1,15 +1,32 @@
 @import  '../../../styles/variables.scss';
 
 .silence-ratio {
-  width: 200px;
-  .speaking {
+  width: 250px;
+  .speaking, .silence {
     display: inline-block;
     height: 10px;
-    background-color: $light-red;
+    padding-right: 2px;
+    span {
+      display: block;
+      height: 10px;
+    }
+  }
+  .speaking {
+    span {
+      background-color: $light-red;
+    }
   }
   .silence {
-    display: inline-block;
-    height: 10px;
-    background-color: $light-blue;
+    color: $dark-blue;
+    &.short {
+      span {
+        background-color: $light-blue;
+      }
+    }
+    &.long {
+      span {
+        background-color: $dark-blue;
+      }
+    }
   }
 }

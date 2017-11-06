@@ -1,5 +1,17 @@
+@import  '../../../styles/variables.scss';
+
 .aort-Trials {
   .wave-container {
     overflow-x: auto;
+  }
+  li {
+    list-style: none;
+    cursor: pointer;
+    border-bottom: solid 1px;
+    &:hover {
+      .player-control {
+        background-color: $active-background;
+      }
+    }
   }
 }

@@ -11,10 +11,8 @@ import speechList from '../../speech_list.json';
 import PlaylistSelect from '../../components/PlaylistSelect/PlaylistSelect';
 import PlaylistItems from '../../components/PlaylistItems/PlaylistItems';
 import SpeechContent from '../../components/SpeechContent/SpeechContent';
-import SpeechSummary from '../../components/SpeechSummary/SpeechSummary';
 import PlaybackBox from '../../components/PlaybackBox/PlaybackBox';
 import NewSpeechForm from '../../components/NewSpeechForm/NewSpeechForm';
-import SilenceRatio from '../../components/SilenceRatio/SilenceRatio';
 
 class PlaylistContainer extends Component {
   constructor(props) {
@@ -117,7 +115,7 @@ class PlaylistContainer extends Component {
     }
     if (selectedSpeech.buffer) {
       return (
-        <PlaybackBox source={source} speech={selectedSpeech} isPlaying={this.state.isPlaying} isEnded={this.state.isEnded} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} />
+        <PlaybackBox source={source} speech={selectedSpeech} isPlaying={this.state.isPlaying} isEnded={this.state.isEnded} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} isSelected={true} container={'playlist'} />
       );
     }
   }
@@ -182,18 +180,6 @@ class PlaylistContainer extends Component {
               </div>
             </div> : null
         }
-        <div>
-          {
-            // selectedSpeech.content && !this.state.addNew ?
-            //   <SpeechSummary speech={selectedSpeech} trial={selectedTrial} /> : null
-          }
-        </div>
-        <div>
-          {
-            // selectedSpeech.content && selectedSpeech.buffer && !this.state.addNew ?
-            //   <SilenceRatio buffer={selectedSpeech.buffer} index={0} /> : null
-          }
-        </div>
         {this.renderPlayBack()}
       </div>
     );

@@ -1,6 +1,6 @@
 export const BAR_WIDTH = 2;
 export const BAR_GUTTER = 1;
-export const CANVAS_HEIGHT = 200;
+export const CANVAS_HEIGHT = 150;
 
 export const BACKGROUND_COLOR = '#FFFFFF';
 export const STROKE_COLOR = '#9DA09B';

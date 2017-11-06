@@ -7,7 +7,6 @@ import './TrialsContainer.scss';
 import {getTrials, deleteTrial, selectTrial} from './actions';
 import {setUserSpeechAudio} from '../PlaylistContainer/actions';
 import {dataURLtoBlob, blobToBuffer} from '../../utils/blobConverter';
-import TrialItem from '../../components/TrialItem/TrialItem';
 import PlaybackBox from '../../components/PlaybackBox/PlaybackBox';
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -93,7 +92,6 @@ class TrialsContainer extends Component {
 
     return (
       <div className="aort-Trials">
-        {this.renderPlayBack()}
         {
           trialItems
           .filter((item) => {
@@ -117,7 +115,13 @@ class TrialsContainer extends Component {
               return b.startTime - a.startTime;
             })
             .map((item, i) => {
-              const handleSelectTrial = () => this.props.actions.selectTrial(item);
+              const handleSelectTrial = () => {
+                this.props.actions.selectTrial(item);
+                this.setState({
+                  isPlaying: false
+                });
+              };
+
               const handleSelectRef = () => {
                 item = {
                   trialId: item.id,
@@ -129,8 +133,9 @@ class TrialsContainer extends Component {
 
               const handleDeleteTrial = () => this.props.actions.deleteTrial(item);
               return (
-                <li key={i} className="container">
-                  <TrialItem item={item} index={i} speech={selectedSpeech} selectedItem={trials.selectedTrial} category={selectedCategory} onSelectTrial={handleSelectTrial} onSelectRef={handleSelectRef} onDeleteTrial={handleDeleteTrial} />
+                <li key={i} onClick={handleSelectTrial} className="container">
+                  {/*<TrialItem item={item} index={i} speech={selectedSpeech} selectedItem={trials.selectedTrial} category={selectedCategory} onSelectTrial={handleSelectTrial} onSelectRef={handleSelectRef} onDeleteTrial={handleDeleteTrial} />*/}
+                  <PlaybackBox speech={item} source={item.blobURL} isPlaying={this.state.isPlaying} isEnded={this.state.isEnded} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} isSelected={trials.selectedTrial && trials.selectedTrial.id === item.id} selectedSpeech={selectedSpeech} category={selectedCategory} onSelectRef={handleSelectRef} onDeleteTrial={handleDeleteTrial} onSelectTrial={handleSelectTrial} container={'trials'} />
                 </li>
               );
             })

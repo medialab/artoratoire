@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './PlaybackBox.scss';
 
 import PlaybackWave from '../PlaybackWave/PlaybackWave';
+import SilenceRatio from '../../components/SilenceRatio/SilenceRatio';
+
 import durationFormat from '../../utils/durationFormat';
 import {BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
 import {SAMPLE_RATE} from '../../constants/AudioConstants';
@@ -18,6 +20,10 @@ class PlaybackBox extends Component {
     };
     this.handleEnded = this.handleEnded.bind(this);
     this.setScroll = this.setScroll.bind(this);
+    this.handleTogglePlay = this.handleTogglePlay.bind(this);
+    this.handleSelectRef = this.handleSelectRef.bind(this);
+    this.handleDeleteTrial = this.handleDeleteTrial.bind(this);
+    this.handleDownLoad = this.handleDownLoad.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -80,35 +86,78 @@ class PlaybackBox extends Component {
       }
     }
   }
+  handleTogglePlay(e) {
+    e.stopPropagation();
+    this.props.onTogglePlay();
+  }
+  handleSelectRef(e) {
+    e.stopPropagation();
+    this.props.onSelectRef();
+  }
+  handleDeleteTrial(e) {
+    e.stopPropagation();
+    this.props.onDeleteTrial();
+  }
+  handleDownLoad(e) {
+    e.stopPropagation();
+  }
   render() {
-    const {speech, source, isPlaying, isEnded, onTogglePlay} = this.props;
+    const {speech, source, isPlaying, isEnded, isSelected, selectedSpeech, category, container} = this.props;
     const duration = speech.buffer.duration * 1000;
     const formatedDuration = durationFormat(duration);
 
     return (
       <div className="aort-PlaybackBox container">
         <div className="wave-container in-transition" ref={node => this.container = node}>
-          <PlaybackWave src={source} buffer={speech.buffer} isPlaying={isPlaying} isEnded={isEnded} onEnded={this.handleEnded} onTimeProgress={this.setScroll} />
+        {
+          isSelected ?
+            <PlaybackWave src={source} buffer={speech.buffer} isPlaying={isPlaying && isSelected} isEnded={isEnded} onEnded={this.handleEnded} onTimeProgress={this.setScroll} /> : null
+        }
         </div>
-        <div className="level player-control">
-          <div className="level-left">
-            <div className="level-item">
-              <button className="button circle-button is-medium" onClick={onTogglePlay}>
-                <span className="icon">
+        <div className={'columns player-control ' + (isSelected ? 'active' : '')} >
+          <div className="column is-one-third level">
+            <div className="level-left">
+              <div className="level-item">
                   {
-                    isPlaying ?
-                      <i className="fa fa-pause"></i> : <i className="fa fa-play offset-icon"></i>
+                    isSelected ?
+                      <button className="button circle-button is-medium" onClick={this.handleTogglePlay}>
+                        <span className="icon">
+                          {
+                            isPlaying ?
+                              <i className="fa fa-pause"></i> : <i className="fa fa-play offset-icon"></i>
+                          }
+                        </span>
+                      </button> : null
                   }
-                </span>
-              </button>
-            </div>
-            <div className="level-item">
-              <div>
-                <p>{speech.label}</p>
-                <small>{formatedDuration}</small>
+              </div>
+              <div className="level-item">
+                <div>
+                  <p>{speech.label}</p>
+                  <small>{formatedDuration}</small>
+                </div>
               </div>
             </div>
           </div>
+          <div className="column is-one-third">
+            <SilenceRatio buffer={speech.buffer} index={0} />
+          </div>
+          {
+            container === 'trials' ?
+              <div className="column level">
+                <div className="level-left"></div>
+                <div className="level-right">
+                  <div className="level-item buttons has-addons">
+                    {
+                      category.value === 'mySpeeches' ?
+                        <button className={'button ' + (selectedSpeech.trialId === speech.id ? 'is-selected is-primary' : '')} disabled={selectedSpeech && speech.id === selectedSpeech.id} onClick={this.handleSelectRef} >Select as reference</button> : null
+                    }
+                    <button className={'button'} onClick={this.handleDeleteTrial}>Delete</button>
+                    {/*<button className={'button'} disabled={(speech.trialId && speech.trialId === item.id) || (selectedItem && item.id === selectedItem.id)} onClick={onDeleteTrial}>delete</button>*/}
+                    <a href={speech.blobURL} onClick={this.handleDownLoad} download={`${speech.label}-${selectedSpeech.label}.mp3`} className="button">Download</a>
+                  </div>
+                </div>
+              </div> : null
+          }
         </div>
       </div>
     );

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import './SilenceRatio.scss';
 
 import {normalizedBuffer} from '../../utils/audioMeasure';
-import {groupBy, keys} from 'lodash';
 
 const SilenceRatio = ({buffer, index}, context) => {
   const silence = normalizedBuffer(buffer.getChannelData(0))
@@ -11,47 +10,52 @@ const SilenceRatio = ({buffer, index}, context) => {
                   .map(d => d.duration);
   const silenceDuration = silence.reduce((a, b) => a + b, 0);
 
-  // const dist = groupBy(silence, Math.floor);
-  //   return (
-  //     <div className="dist">
-  //       {
-  //         keys(dist).map((key, i) => {
-  //           return (
-  //             <div key={i}>
-  //               <p>{`${key}s - ${parseInt(key)+1}s`}</p>
-  //               <span className="silence" style={{width: dist[key].length * 10}}></span>
-  //               <small>{dist[key].length}</small>
-  //             </div>
-  //           );
-  //         })
-  //       }
-  //     </div>
-  //   );
+  let shortSilenceDuration = 0;
+  let longSilenceDuration = 0;
+  silence.forEach((d) => {
+    if (d < 1)
+      shortSilenceDuration += d;
+    else
+      longSilenceDuration += d;
+  });
 
   const speakingDuration = buffer.duration - silenceDuration;
+
   return (
     <div className="silence-ratio">
       { index === 0 ?
-        <p>
+        <small>
           <span className="has-text-danger">Speaking</span>
-          <span>/</span>
-          <span className="has-text-primary">Silence</span>
-        </p> : null
+          <span> | </span>
+          <span className="silence">Short</span>
+          <span> | </span>
+          <span className="silence">Long Silence</span>
+        </small> : null
       }
       <div className="bars">
-        <span className="speaking" style={{width : speakingDuration / buffer.duration * 100 + '%'}}></span>
-        <span className="silence" style={{width : silenceDuration / buffer.duration * 100 + '%'}}></span>
+        <div className="speaking" style={{width : speakingDuration / buffer.duration * 100 + '%'}}>
+          <span></span>
+        </div>
+        {
+          shortSilenceDuration > 0 ?
+          <div className="silence short" style={{width : shortSilenceDuration / buffer.duration * 100 + '%'}}>
+            <span></span>
+          </div> : null
+        }
+        {
+          longSilenceDuration > 0 ?
+          <div className="silence long" style={{width : longSilenceDuration / buffer.duration * 100 + '%'}}>
+            <span></span>
+          </div> : null
+        }
       </div>
-      <small className="level bars">
-        <div className="level-left">
-          <span className="has-text-danger">{Math.floor(speakingDuration / buffer.duration * 100) + '%'} </span>
-          <span>/</span>
-          <span className="has-text-primary">{Math.ceil(silenceDuration / buffer.duration * 100) + '%'}</span>
-        </div>
-        <div className="level-right">
-          <span className="has-text-right"></span>
-        </div>
-      </small>
+      {<small>
+        <span className="has-text-danger">{Math.ceil(speakingDuration / buffer.duration * 100) + '%'} </span>
+        <span> | </span>
+        <span className="silence">{Math.floor(shortSilenceDuration / buffer.duration * 100) + '%'}</span>
+        <span> | </span>
+        <span className="silence">{Math.floor(longSilenceDuration / buffer.duration * 100) + '%'}</span>
+      </small>}
     </div>
   );
 };
