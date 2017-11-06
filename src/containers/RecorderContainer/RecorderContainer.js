@@ -90,7 +90,7 @@ class RecorderContainer extends Component {
   render() {
     const {enableRecorder, isRecording, countdown} = this.state;
     return (
-      <div ref={node=> this.container = node} className="aort-RecorderContainer">
+      <div ref={node=> this.container = node} className="aort-Recorder container">
         <StreamingWave
           isRecording={isRecording}
           enableRecorder={enableRecorder}
@@ -101,8 +101,8 @@ class RecorderContainer extends Component {
         <div className="level">
           <div className="level-item is-centered">
             {
-              // this.state.isRecording ?
-              //   null :
+              isRecording ?
+                null :
                 <button className="level-item button circle-button is-primary is-large" onClick={enableRecorder ? this.startRecording : this.activeRecorder} disabled={isRecording}>
                   <span className="icon is-small">
                     {
@@ -114,11 +114,11 @@ class RecorderContainer extends Component {
             }
             {
               isRecording ?
-                <a className="level-item button circle-button" onClick={this.saveRecording}>
+                <button className="level-item button circle-button is-large" onClick={this.saveRecording}>
                   <span className="icon is-small">
-                    <i className="fa fa-sm fa-stop"></i>
+                    <i className="fa fa-stop"></i>
                   </span>
-                </a>
+                </button>
                 : null
             }
           </div>

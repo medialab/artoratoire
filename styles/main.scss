@@ -3,3 +3,7 @@
 // import font-awesome
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
+
+.button, .label, .notification, .tabs, select, .table {
+  font-family: $family-elements;
+}
