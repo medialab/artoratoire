@@ -1,8 +1,9 @@
-import {SELECT_CATEGORY, SELECT_SPEECH, SAVE_USER_SPEECHES, INIT_USER_SPEECHES, CLEAR_SELECTED_SPEECH} from './actions';
+import {SELECT_CATEGORY, SELECT_SPEECH, SAVE_USER_SPEECHES, INIT_USER_SPEECHES, CLEAR_SELECTED_SPEECH, TOGGLE_SPEECH_WAVE} from './actions';
 
 const initialPlaylistState = {
   selectedCategory: {},
   selectedSpeech: {},
+  showSpeechWave: true,
   userSpeeches: {
     label: 'My Speeches',
     value: 'mySpeeches',
@@ -46,6 +47,11 @@ export default function playlist(state = initialPlaylistState, action) {
           ...state.userSpeeches,
           list: action.speeches
         }
+      };
+    case TOGGLE_SPEECH_WAVE:
+      return {
+        ...state,
+        showSpeechWave: action.showWave
       };
 
     default:

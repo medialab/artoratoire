@@ -12,6 +12,7 @@ export const CLEAR_SELECTED_SPEECH = 'CLEAR_SELECTED_SPEECH';
 export const SAVE_USER_SPEECHES = 'SAVE_USER_SPEECHES';
 export const GET_USER_SPEECHES = 'GET_USER_SPEECHES';
 export const INIT_USER_SPEECHES = 'INIT_USER_SPEECHES';
+export const TOGGLE_SPEECH_WAVE = 'SHOW_SPEECH_WAVE';
 
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -103,3 +104,8 @@ export const getUserSpeeches = () => {
   };
 };
 
+export const toggleSpeechWave = showWave => {
+  return dispatch => {
+    dispatch({type: TOGGLE_SPEECH_WAVE, showWave});
+  };
+};

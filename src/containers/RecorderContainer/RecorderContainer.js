@@ -6,9 +6,10 @@ import {connect} from 'react-redux';
 import './RecorderContainer.scss';
 import StreamingWave from '../../components/StreamingWave/StreamingWave';
 import {saveTrial, selectTrial} from '../TrialsContainer/actions';
-import {blobToBuffer} from '../../utils/blobConverter';
+import {toggleSpeechWave} from '../PlaylistContainer/actions';
+// import {blobToBuffer} from '../../utils/blobConverter';
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+// const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 class RecorderContainer extends Component {
   constructor(props) {
@@ -29,6 +30,7 @@ class RecorderContainer extends Component {
   }
 
   startRecording = () => {
+    this.props.actions.toggleSpeechWave(false);
     const int = setInterval(() => {
       if (this.state.countdown === 0) {
         this.setState({
@@ -67,14 +69,13 @@ class RecorderContainer extends Component {
   }
 
   onStop = (blobObject) => {
-    const {saveTrial, selectTrial} = this.props.actions;
     const trialsCount = this.props.trials.list.filter((item) => {
       return item.refSpeech === this.props.selectedSpeech.label;
     }).length;
 
     blobObject = {...blobObject, refSpeech: this.props.selectedSpeech.label};
     if (this.state.saveRecording) {
-      saveTrial(blobObject, trialsCount);
+      this.props.actions.saveTrial(blobObject, trialsCount);
       // blobToBuffer(blobObject.blob, data => {
       //   audioContext.decodeAudioData(data, function(buffer) {
       //     const trial = {
@@ -115,8 +116,8 @@ class RecorderContainer extends Component {
             {
               isRecording ?
                 <button className="level-item button circle-button is-large" onClick={this.saveRecording}>
-                  <span className="icon is-small">
-                    <i className="fa fa-stop"></i>
+                  <span className="icon is-small has-text-success">
+                    <i className="fa fa-check"></i>
                   </span>
                 </button>
                 : null
@@ -140,7 +141,8 @@ export default connect(
   dispatch => ({
     actions: bindActionCreators({
       saveTrial,
-      selectTrial
+      selectTrial,
+      toggleSpeechWave
     }, dispatch)
   })
 )(RecorderContainer);

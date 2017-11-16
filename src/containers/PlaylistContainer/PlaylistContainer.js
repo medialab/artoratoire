@@ -4,14 +4,14 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import './PlaylistContainer.scss';
-import {selectCategory, selectSpeech, selectUserSpeech, clearSelectedSpeech, saveUserSpeeches, getUserSpeeches} from './actions';
+import {selectCategory, selectSpeech, selectUserSpeech, clearSelectedSpeech, saveUserSpeeches, getUserSpeeches, toggleSpeechWave} from './actions';
 import {selectTrial} from '../TrialsContainer/actions';
 
 import speechList from '../../speech_list.json';
 import PlaylistSelect from '../../components/PlaylistSelect/PlaylistSelect';
 import PlaylistItems from '../../components/PlaylistItems/PlaylistItems';
 import SpeechContent from '../../components/SpeechContent/SpeechContent';
-import PlaybackBox from '../../components/PlaybackBox/PlaybackBox';
+import PlaybackItems from '../../components/PlaybackItems/PlaybackItems';
 import NewSpeechForm from '../../components/NewSpeechForm/NewSpeechForm';
 
 class PlaylistContainer extends Component {
@@ -25,8 +25,6 @@ class PlaylistContainer extends Component {
 
     this.onSelectChange = this.onSelectChange.bind(this);
     this.onSpeechClick = this.onSpeechClick.bind(this);
-    this.handleTogglePlay = this.handleTogglePlay.bind(this);
-    this.handleEnded = this.handleEnded.bind(this);
     this.showNewSpeechForm = this.showNewSpeechForm.bind(this);
     this.onNewSpeechSaved = this.onNewSpeechSaved.bind(this);
     this.onNewSpeechCancelled = this.onNewSpeechCancelled.bind(this);
@@ -64,19 +62,19 @@ class PlaylistContainer extends Component {
     });
   }
 
-  handleTogglePlay() {
-    this.setState({
-      isPlaying: !this.state.isPlaying,
-      isEnded: false
-    });
-  }
+  // handleTogglePlay() {
+  //   this.setState({
+  //     isPlaying: !this.state.isPlaying,
+  //     isEnded: false
+  //   });
+  // }
 
-  handleEnded () {
-    this.setState({
-      isPlaying: false,
-      isEnded: true
-    });
-  }
+  // handleEnded () {
+  //   this.setState({
+  //     isPlaying: false,
+  //     isEnded: true
+  //   });
+  // }
 
   showNewSpeechForm () {
     this.setState({
@@ -105,7 +103,7 @@ class PlaylistContainer extends Component {
   }
 
   renderPlayBack() {
-    const {selectedSpeech} = this.props;
+    const {selectedSpeech, showSpeechWave} = this.props;
     let source;
     if (selectedSpeech.file_name) {
       source = `./speech_material/${selectedSpeech.file_name}.mp3`;
@@ -113,9 +111,14 @@ class PlaylistContainer extends Component {
     else {
       source = selectedSpeech.blobURL;
     }
+
+    const item = {
+      ...selectedSpeech,
+      source
+    };
     if (selectedSpeech.buffer) {
       return (
-        <PlaybackBox source={source} speech={selectedSpeech} isPlaying={this.state.isPlaying} isEnded={this.state.isEnded} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} isSelected={true} container={'playlist'} />
+        <PlaybackItems items={[item]} selectedItem={item} type={'speech'} onToggleSpeechWave={this.props.actions.toggleSpeechWave} showWave={showSpeechWave} />
       );
     }
   }
@@ -196,7 +199,8 @@ export default connect(
     selectedCategory: state.playlist.selectedCategory,
     selectedSpeech: state.playlist.selectedSpeech,
     selectedTrial: state.trials.selectedTrial,
-    userSpeeches: state.playlist.userSpeeches
+    userSpeeches: state.playlist.userSpeeches,
+    showSpeechWave: state.playlist.showSpeechWave
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -206,6 +210,7 @@ export default connect(
       clearSelectedSpeech,
       saveUserSpeeches,
       getUserSpeeches,
+      toggleSpeechWave,
       selectTrial
     }, dispatch)
   })

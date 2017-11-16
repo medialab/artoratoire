@@ -5,9 +5,9 @@ import {connect} from 'react-redux';
 
 import './TrialsContainer.scss';
 import {getTrials, deleteTrial, selectTrial} from './actions';
-import {setUserSpeechAudio} from '../PlaylistContainer/actions';
+import {setUserSpeechAudio, toggleSpeechWave} from '../PlaylistContainer/actions';
 import {dataURLtoBlob, blobToBuffer} from '../../utils/blobConverter';
-import PlaybackBox from '../../components/PlaybackBox/PlaybackBox';
+import PlaybackItems from '../../components/PlaybackItems/PlaybackItems';
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -15,14 +15,13 @@ class TrialsContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isPlaying: false,
-      isEnded: false,
       trialItems: []
     };
-    this.handleTogglePlay = this.handleTogglePlay.bind(this);
-    this.handleEnded = this.handleEnded.bind(this);
+    this.handleSelectTrial = this.handleSelectTrial.bind(this);
+    this.handleSelectRef = this.handleSelectRef.bind(this);
+    this.handleDeleteTrial = this.handleDeleteTrial.bind(this);
     this.activateTab = this.activateTab.bind(this);
-
+    this.handleToggleSpeechWave = this.handleToggleSpeechWave.bind(this);
   }
 
   componentDidMount() {
@@ -61,42 +60,43 @@ class TrialsContainer extends Component {
     }
   }
 
-  handleTogglePlay() {
-    this.setState({
-      isPlaying: !this.state.isPlaying,
-      isEnded: false
-    });
-  }
-  handleEnded () {
-    this.setState({
-      isPlaying: false,
-      isEnded: true
-    });
-  }
-
   activateTab () {
     this.props.onTabSelect(0);
   }
 
-  renderPlayBack() {
-    const {trials} = this.props;
-    if (trials.selectedTrial) {
-      return (
-        <PlaybackBox speech={trials.selectedTrial} source={trials.selectedTrial.blobURL} isPlaying={this.state.isPlaying} isEnded={this.state.isEnded} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} />
-      );
+  handleSelectTrial(item) {
+    this.props.actions.selectTrial(item);
+  }
+
+  handleSelectRef(item) {
+    const ref = {
+      trialId: item.id,
+      buffer: item.buffer,
+      blobURL: item.blobURL
+    };
+    this.props.actions.setUserSpeechAudio(this.props.selectedSpeech, ref);
+  }
+
+  handleDeleteTrial(item) {
+    this.props.actions.deleteTrial(item);
+    if (this.props.trials.selectedTrial.id === item.id) {
+      this.props.actions.selectTrial(null);
     }
   }
+  handleToggleSpeechWave(showWave) {
+    this.props.actions.toggleSpeechWave(showWave);
+  }
+
   render() {
     const {trials, selectedSpeech, selectedCategory} = this.props;
     const {trialItems} = this.state;
-
+    const filteredTrialItems = trialItems.filter((item) => {
+              return item.refSpeech === selectedSpeech.label;
+            });
     return (
       <div className="aort-Trials">
         {
-          trialItems
-          .filter((item) => {
-            return item.refSpeech === selectedSpeech.label;
-          }).length === 0 ?
+          filteredTrialItems.length === 0 ?
             <div className="container">
               <div className="columns is-centered">
                 <div className="column is-one-quarter has-text-centered notification">
@@ -105,42 +105,7 @@ class TrialsContainer extends Component {
               </div>
             </div> : null
         }
-        <ul>
-          {
-            trialItems
-            .filter((item) => {
-              return item.refSpeech === selectedSpeech.label;
-            })
-            .sort((a, b) => {
-              return b.startTime - a.startTime;
-            })
-            .map((item, i) => {
-              const handleSelectTrial = () => {
-                this.props.actions.selectTrial(item);
-                this.setState({
-                  isPlaying: false
-                });
-              };
-
-              const handleSelectRef = () => {
-                item = {
-                  trialId: item.id,
-                  buffer: item.buffer,
-                  blobURL: item.blobURL
-                };
-                this.props.actions.setUserSpeechAudio(selectedSpeech, item);
-              };
-
-              const handleDeleteTrial = () => this.props.actions.deleteTrial(item);
-              return (
-                <li key={i} onClick={handleSelectTrial} className="container">
-                  {/*<TrialItem item={item} index={i} speech={selectedSpeech} selectedItem={trials.selectedTrial} category={selectedCategory} onSelectTrial={handleSelectTrial} onSelectRef={handleSelectRef} onDeleteTrial={handleDeleteTrial} />*/}
-                  <PlaybackBox speech={item} source={item.blobURL} isPlaying={this.state.isPlaying} isEnded={this.state.isEnded} onEnded={this.handleEnded} onTogglePlay={this.handleTogglePlay} isSelected={trials.selectedTrial && trials.selectedTrial.id === item.id} selectedSpeech={selectedSpeech} category={selectedCategory} onSelectRef={handleSelectRef} onDeleteTrial={handleDeleteTrial} onSelectTrial={handleSelectTrial} container={'trials'} />
-                </li>
-              );
-            })
-          }
-        </ul>
+        <PlaybackItems items={filteredTrialItems} onSelectRef={this.handleSelectRef} onDeleteTrial={this.handleDeleteTrial} onSelectTrial={this.handleSelectTrial} selectedSpeech={selectedSpeech} category={selectedCategory} selectedItem={trials.selectedTrial} type={'trials'} onToggleSpeechWave={this.handleToggleSpeechWave} />
       </div>
     );
   }
@@ -161,7 +126,8 @@ export default connect(
       getTrials,
       deleteTrial,
       selectTrial,
-      setUserSpeechAudio
+      setUserSpeechAudio,
+      toggleSpeechWave
     }, dispatch)
   })
 )(TrialsContainer);
