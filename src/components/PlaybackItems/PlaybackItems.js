@@ -60,8 +60,8 @@ class PlaybackItems extends Component {
 
 
   setScroll (currentTime) {
-    const {selectedItem} = this.props;
-    if (!this.state.isScrolling) {
+    const {selectedItem, type, showWave} = this.props;
+    if (!this.state.isScrolling && (showWave || type === 'trials')) {
       const item = selectedItem;
 
       const currentBars = Math.ceil(currentTime * 48000 / SAMPLE_RATE);
@@ -78,6 +78,7 @@ class PlaybackItems extends Component {
       }
     }
   }
+
   handleToggleSpeechWave () {
     const showWave = !this.props.showWave;
     this.props.onToggleSpeechWave(showWave);
@@ -140,7 +141,7 @@ class PlaybackItems extends Component {
                   e.stopPropagation();
                 };
               return (
-                <li key={i} onClick={handleSelectItem} className="container">
+                <li key={i} onClick={type === 'speech' ? this.handleToggleSpeechWave : handleSelectItem} className="container">
                   <div className={'columns player-control ' + (isSelected ? 'active' : '')} >
                     <div className="column is-one-third level">
                       <div className="level-left">
@@ -173,11 +174,9 @@ class PlaybackItems extends Component {
                         <div className="column level">
                           <div className="level-left"></div>
                           <div className="level-right">
-                            <a className="button is-light" onClick={this.handleToggleSpeechWave}>
-                              <span className="icon is-small">
-                                <i className={'fa ' + (this.props.showWave ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
-                              </span>
-                            </a>
+                            <span className="icon is-large">
+                              <i className={'fa ' + (this.props.showWave ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
+                            </span>
                           </div>
                         </div> : null
                     }
@@ -205,9 +204,9 @@ class PlaybackItems extends Component {
           }
         </ul>
         {
-          type === 'speech' && showWave ?
-            <div className="wave-container" ref={node => this.container = node}>
-              <PlaybackWave src={items[0].source} buffer={items[0].buffer} isPlaying={isPlaying} isEnded={isEnded} onEnded={this.handleEnded} onTimeProgress={this.setScroll} />
+          type === 'speech' ?
+            <div className="wave-container" style={{display: showWave ? 'block' : 'none'}} ref={node => this.container = node}>
+              <PlaybackWave src={items[0].source} buffer={items[0].buffer} showCanvas={showWave} isPlaying={isPlaying} isEnded={isEnded} onEnded={this.handleEnded} onTimeProgress={this.setScroll} />
             </div> : null
         }
       </div>

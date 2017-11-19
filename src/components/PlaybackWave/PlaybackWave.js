@@ -30,7 +30,7 @@ export default class PlaybackWave extends Component {
     if (!nextProps.isPlaying && nextProps.isPlaying !== this.props.isPlaying) {
       this.audio.pause();
     }
-    if (nextProps.src !== this.props.src) {
+    if (nextProps.src !== this.props.src || nextProps.showCanvas !== this.props.showCanvas) {
       this.clear();
       this.loadWave(nextProps.buffer);
     }
