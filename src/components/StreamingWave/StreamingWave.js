@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {MicRecorder} from './MicRecorder';
 import AudioContext from './AudioContext';
-import {CANVAS_HEIGHT, BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
+import {STREAM_BACKGROUND_COLOR, STREAM_STROKE_COLOR, CANVAS_HEIGHT, BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
 import {sampleProps} from '../../utils/audioMeasure';
 import './StreamingWave.scss';
 
@@ -156,8 +156,8 @@ StreamingWave.contextTypes = {
 StreamingWave.propTypes = {};
 
 StreamingWave.defaultProps = {
-  backgroundColor: '#eee',
-  strokeColor: '#000000',
+  backgroundColor: STREAM_BACKGROUND_COLOR,
+  strokeColor: STREAM_STROKE_COLOR,
   audioBitsPerSecond: 128000,
   mimeType: 'audio/mpeg',
   isRecording: false,

@@ -68,3 +68,47 @@ export function normalizedBuffer(data, threshold = THRESHOLD, dMin = MIN_DURATIO
 
   return normBuffer;
 }
+
+const getSpeechLabel = (buffer) => {
+  let iterSilence = 0;
+  const shortSilence = MIN_DURATION * SEC_BUFFER / SAMPLE_RATE;
+  const longSilence = SEC_BUFFER / SAMPLE_RATE;
+
+  const labels = new Array(buffer.length).fill('speaking');
+  buffer.forEach((d, i) => {
+    if (d === 1) iterSilence = 0;
+    else {
+      iterSilence = iterSilence + 1;
+      if (iterSilence > shortSilence && iterSilence <= longSilence) {
+        for (let j = (i - iterSilence + 1); j <= i; j++) {
+          labels[j] = 'short';
+        }
+      }
+      else if (iterSilence > longSilence) {
+        for (let j = (i - iterSilence + 1); j <= i; j++) {
+          labels[j] = 'long';
+        }
+      }
+    }
+  });
+  return labels;
+};
+
+export function getSpeechData(data, threshold = THRESHOLD, step = SAMPLE_RATE) {
+  const buffer = [];
+  const sampleData = [];
+  for (let i = 0; i < data.length / step; i ++) {
+    const bar = sampleProps(data, i, step);
+    if (bar.rms < threshold) buffer.push(0);
+    else buffer.push(1);
+    sampleData.push(bar);
+  }
+  const labels = getSpeechLabel(buffer);
+  const speechData = labels.map((d, i) => {
+    return {
+      ...sampleData[i],
+      label: labels[i]
+    };
+  });
+  return speechData;
+}

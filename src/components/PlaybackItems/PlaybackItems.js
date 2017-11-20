@@ -62,15 +62,13 @@ class PlaybackItems extends Component {
   setScroll (currentTime) {
     const {selectedItem, type, showWave} = this.props;
     if (!this.state.isScrolling && (showWave || type === 'trials')) {
-      const item = selectedItem;
 
       const currentBars = Math.ceil(currentTime * 48000 / SAMPLE_RATE);
       const progressWidth = currentBars * (BAR_WIDTH + BAR_GUTTER);
       const offsetWidth = this.container.offsetWidth;
-      const data = item.buffer.getChannelData(0);
-      const canvasWidth = Math.ceil((data.length / SAMPLE_RATE) * (BAR_WIDTH + BAR_GUTTER));
+      const canvasWidth = Math.ceil((selectedItem.speechData.length) * (BAR_WIDTH + BAR_GUTTER));
       if (progressWidth > offsetWidth / 2 && canvasWidth > offsetWidth) {
-        const timeLeft = (item.buffer.duration - currentTime) * 1000;
+        const timeLeft = (selectedItem.buffer.duration - currentTime) * 1000;
         this.scrollTo(this.container, canvasWidth - offsetWidth, timeLeft * 0.75);
         this.setState({
           isScrolling: true
@@ -110,7 +108,7 @@ class PlaybackItems extends Component {
         {
           type === 'trials' && selectedItem ?
             <div className="wave-container in-transition" ref={node => this.container = node}>
-              <PlaybackWave src={selectedItem.blobURL} buffer={selectedItem.buffer} isPlaying={isPlaying} isEnded={isEnded} onEnded={this.handleEnded} onTimeProgress={this.setScroll} />
+              <PlaybackWave src={selectedItem.blobURL} data={selectedItem.speechData} isPlaying={isPlaying} isEnded={isEnded} onEnded={this.handleEnded} onTimeProgress={this.setScroll} />
             </div> : null
         }
         <ul>
@@ -167,7 +165,7 @@ class PlaybackItems extends Component {
                       </div>
                     </div>
                     <div className={'column ' + (type === 'trials' ? 'is-one-third' : 'is-half')}>
-                      <SilenceRatio buffer={item.buffer} type={type} />
+                      <SilenceRatio buffer={item.buffer} data={item.speechData} type={type} />
                     </div>
                     {
                       type === 'speech' ?
@@ -206,7 +204,7 @@ class PlaybackItems extends Component {
         {
           type === 'speech' ?
             <div className="wave-container" style={{display: showWave ? 'block' : 'none'}} ref={node => this.container = node}>
-              <PlaybackWave src={items[0].source} buffer={items[0].buffer} showCanvas={showWave} isPlaying={isPlaying} isEnded={isEnded} onEnded={this.handleEnded} onTimeProgress={this.setScroll} />
+              <PlaybackWave src={selectedItem.source} data={selectedItem.speechData} showCanvas={showWave} isPlaying={isPlaying} isEnded={isEnded} onEnded={this.handleEnded} onTimeProgress={this.setScroll} />
             </div> : null
         }
       </div>

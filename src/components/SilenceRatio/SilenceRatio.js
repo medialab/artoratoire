@@ -2,34 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './SilenceRatio.scss';
 
-import {normalizedBuffer} from '../../utils/audioMeasure';
+import {SEC_BUFFER, SAMPLE_RATE} from '../../constants/AudioConstants';
 
-const SilenceRatio = ({buffer, index}, context) => {
-  const silence = normalizedBuffer(buffer.getChannelData(0))
-                  .filter(d => d.status === 'silence')
-                  .map(d => d.duration);
-  const silenceDuration = silence.reduce((a, b) => a + b, 0);
+const SilenceRatio = ({buffer, data, type}, context) => {
 
-  let shortSilenceDuration = 0;
-  let longSilenceDuration = 0;
-  silence.forEach((d) => {
-    if (d < 1)
-      shortSilenceDuration += d;
-    else
-      longSilenceDuration += d;
-  });
+  const shortSilenceDuration = data.filter(d => d.label === 'short').length * (SAMPLE_RATE / SEC_BUFFER);
+  const longSilenceDuration = data.filter(d => d.label === 'long').length * (SAMPLE_RATE / SEC_BUFFER);
 
-  const speakingDuration = buffer.duration - silenceDuration;
+  const speakingDuration = buffer.duration - shortSilenceDuration - longSilenceDuration;
 
   return (
     <div className="silence-ratio">
-      { index === 0 ?
+      { type === 'speech' ?
         <small>
-          <span className="has-text-danger">Speaking</span>
+          <span className="speaking">Speaking</span>
           <span> | </span>
-          <span className="silence">Short</span>
+          <span className="silence short">Short Silence(between 0.3s and 1s)</span>
           <span> | </span>
-          <span className="silence">Long Silence</span>
+          <span className="silence long">Long Silence (longer than 1s)</span>
         </small> : null
       }
       <div className="bars">
@@ -50,11 +40,11 @@ const SilenceRatio = ({buffer, index}, context) => {
         }
       </div>
       {<small>
-        <span className="has-text-danger">{Math.ceil(speakingDuration / buffer.duration * 100) + '%'} </span>
+        <span className="speaking">{Math.ceil(speakingDuration / buffer.duration * 100) + '%'} </span>
         <span> | </span>
-        <span className="silence">{Math.floor(shortSilenceDuration / buffer.duration * 100) + '%'}</span>
+        <span className="silence short">{Math.floor(shortSilenceDuration / buffer.duration * 100) + '%'}</span>
         <span> | </span>
-        <span className="silence">{Math.floor(longSilenceDuration / buffer.duration * 100) + '%'}</span>
+        <span className="silence long">{Math.floor(longSilenceDuration / buffer.duration * 100) + '%'}</span>
       </small>}
     </div>
   );

@@ -1,6 +1,9 @@
 import axios from 'axios';
 import textExtractor from '../../utils/textExtractor';
+import {getSpeechData} from '../../utils/audioMeasure';
+
 import uuid from 'uuid';
+
 
 // Actions
 
@@ -39,7 +42,8 @@ export const selectSpeech = speech => {
         speech = {
           ...speech,
           ...content,
-          buffer
+          buffer,
+          speechData: getSpeechData(buffer.getChannelData(0))
         };
         dispatch({type: SELECT_SPEECH, speech});
       });

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import './PlaybackWave.scss';
 
 import {SAMPLE_RATE, THRESHOLD} from '../../constants/AudioConstants';
-import {BAR_WIDTH, BAR_GUTTER, CANVAS_HEIGHT, BACKGROUND_COLOR, STROKE_COLOR, HIGHLIGHT_COLOR, HIGHLIGHT_SILENCE_COLOR} from '../../constants/CanvasConstants';
-
-import {sampleProps} from '../../utils/audioMeasure';
+import {BAR_WIDTH, BAR_GUTTER, CANVAS_HEIGHT, BACKGROUND_COLOR, STROKE_COLOR, SPEAKING_COLOR, SHORT_SILENCE_COLOR, LONG_SILENCE_COLOR} from '../../constants/CanvasConstants';
 
 export default class PlaybackWave extends Component {
   constructor(props) {
@@ -16,14 +14,14 @@ export default class PlaybackWave extends Component {
   componentDidMount() {
     this.audio.ontimeupdate = this.progressUpdate;
     this.audio.onended = this.audioEnd;
-    this.loadWave(this.props.buffer);
+    this.loadWave(this.props.data);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isPlaying && nextProps.isPlaying !== this.props.isPlaying) {
       if (this.props.isEnded) {
         this.clear();
-        this.loadWave(this.props.buffer);
+        this.loadWave(this.props.data);
       }
       this.audio.play();
     }
@@ -32,7 +30,7 @@ export default class PlaybackWave extends Component {
     }
     if (nextProps.src !== this.props.src || nextProps.showCanvas !== this.props.showCanvas) {
       this.clear();
-      this.loadWave(nextProps.buffer);
+      this.loadWave(nextProps.data);
     }
   }
 
@@ -41,14 +39,12 @@ export default class PlaybackWave extends Component {
     onEnded();
   }
 
-  loadWave(buffer) {
-    const {backgroundColor, strokeColor, height, barWidth, barGutter} = this.props;
+  loadWave(data) {
+    const {backgroundColor, speakingColor, strokeColor, shortSilenceColor, longSilenceColor, height, barWidth, barGutter} = this.props;
     const canvas = this.canvas;
     const canvasCtx = canvas.getContext('2d');
 
-    const data = buffer.getChannelData(0);
-    const width = Math.ceil((data.length / SAMPLE_RATE) * (BAR_WIDTH + BAR_GUTTER));
-
+    const width = Math.ceil((data.length) * (BAR_WIDTH + BAR_GUTTER));
     canvas.width = width;
     canvas.height = height;
 
@@ -57,20 +53,18 @@ export default class PlaybackWave extends Component {
     canvasCtx.fillStyle = backgroundColor;
     canvasCtx.fillRect(0, 0, width, height);
 
-    const step = SAMPLE_RATE;
-    for (let i = 0; i < data.length / step; i ++) {
-      const bar = sampleProps(data, i, step);
-      if (bar.rms > THRESHOLD) {
+    data.forEach((d, i) => {
+      if (d.label === 'speaking') {
         canvasCtx.fillStyle = strokeColor;
-        canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.max);
-        canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.min);
+        canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * d.max);
+        canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * d.min);
       }
-    }
+    });
   }
 
   progressUpdate () {
-    const {highlightColor, silenceColor, buffer, barWidth, barGutter, onTimeProgress, isPlaying} = this.props;
-    const data = buffer.getChannelData(0);
+    const {speakingColor, shortSilenceColor, longSilenceColor, data, barWidth, barGutter, onTimeProgress, isPlaying} = this.props;
+    // const data = getSpeechData(buffer.getChannelData(0));
     const step = SAMPLE_RATE;
     const currentBars = Math.ceil(this.audio.currentTime * 48000 / step);
     const canvas = this.canvas;
@@ -81,16 +75,20 @@ export default class PlaybackWave extends Component {
 
     window.requestAnimationFrame(() => {
       for (let i = 0; i < currentBars; i ++) {
-        const bar = sampleProps(data, i, step);
-        if (bar.rms > THRESHOLD) {
-          canvasCtx.fillStyle = highlightColor;
-          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.max);
-          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * bar.min);
+        if (data[i].label === 'speaking') {
+          canvasCtx.fillStyle = speakingColor;
+          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * data[i].max);
+          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * data[i].min);
+        }
+        else if (data[i].label === 'short') {
+          canvasCtx.fillStyle = shortSilenceColor;
+          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth + barGutter, - halfHeight * THRESHOLD);
+          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth + barGutter, halfHeight * THRESHOLD);
         }
         else {
-          canvasCtx.fillStyle = silenceColor;
-          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, - halfHeight * THRESHOLD);
-          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth, halfHeight * THRESHOLD);
+          canvasCtx.fillStyle = longSilenceColor;
+          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth + barGutter, - halfHeight * THRESHOLD);
+          canvasCtx.fillRect(i * (barWidth + barGutter), halfHeight, barWidth + barGutter, halfHeight * THRESHOLD);
         }
       }
     });
@@ -124,8 +122,9 @@ PlaybackWave.propTypes = {};
 PlaybackWave.defaultProps = {
   backgroundColor: BACKGROUND_COLOR,
   strokeColor: STROKE_COLOR,
-  highlightColor: HIGHLIGHT_COLOR,
-  silenceColor: HIGHLIGHT_SILENCE_COLOR,
+  speakingColor: SPEAKING_COLOR,
+  shortSilenceColor: SHORT_SILENCE_COLOR,
+  longSilenceColor: LONG_SILENCE_COLOR,
   height: CANVAS_HEIGHT,
   barWidth: BAR_WIDTH,
   barGutter: BAR_GUTTER

@@ -7,6 +7,7 @@ import './TrialsContainer.scss';
 import {getTrials, deleteTrial, selectTrial} from './actions';
 import {setUserSpeechAudio, toggleSpeechWave} from '../PlaylistContainer/actions';
 import {dataURLtoBlob, blobToBuffer} from '../../utils/blobConverter';
+import {getSpeechData} from '../../utils/audioMeasure';
 import PlaybackItems from '../../components/PlaybackItems/PlaybackItems';
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -41,7 +42,8 @@ class TrialsContainer extends Component {
               item = {
                 ...item,
                 blobURL: window.URL.createObjectURL(blob),
-                buffer
+                buffer,
+                speechData: getSpeechData(buffer.getChannelData(0))
               };
               items.push(item);
 
@@ -72,6 +74,7 @@ class TrialsContainer extends Component {
     const ref = {
       trialId: item.id,
       buffer: item.buffer,
+      speechData: item.speechData,
       blobURL: item.blobURL
     };
     this.props.actions.setUserSpeechAudio(this.props.selectedSpeech, ref);

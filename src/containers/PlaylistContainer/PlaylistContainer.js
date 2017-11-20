@@ -163,6 +163,11 @@ class PlaylistContainer extends Component {
             selectedSpeech.content && !this.state.addNew ?
               <div className="column">
                 <SpeechContent speech={selectedSpeech} />
+                {/*<div>
+                  <button className="button">
+                    Add a trial
+                  </button>
+                </div>*/}
               </div> : null
 
           }
