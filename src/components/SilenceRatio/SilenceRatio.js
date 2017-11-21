@@ -5,7 +5,7 @@ import './SilenceRatio.scss';
 import {SEC_BUFFER, SAMPLE_RATE} from '../../constants/AudioConstants';
 
 const SilenceRatio = ({buffer, data, type}, context) => {
-
+  const translate = context.t;
   const shortSilenceDuration = data.filter(d => d.label === 'short').length * (SAMPLE_RATE / SEC_BUFFER);
   const longSilenceDuration = data.filter(d => d.label === 'long').length * (SAMPLE_RATE / SEC_BUFFER);
 
@@ -15,11 +15,11 @@ const SilenceRatio = ({buffer, data, type}, context) => {
     <div className="silence-ratio">
       { type === 'speech' ?
         <small>
-          <span className="speaking">Speaking</span>
+          <span className="speaking">{translate('speaking')}</span>
           <span> | </span>
-          <span className="silence short">Short Silence(between 0.3s and 1s)</span>
+          <span className="silence short">{translate('short-silence')}</span>
           <span> | </span>
-          <span className="silence long">Long Silence (longer than 1s)</span>
+          <span className="silence long">{translate('long-silence')}</span>
         </small> : null
       }
       <div className="bars">

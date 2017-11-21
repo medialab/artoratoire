@@ -131,6 +131,7 @@ class PlaylistContainer extends Component {
       options = speechList.concat(userSpeeches);
     }
     else options = speechList;
+
     return (
       <div className="aort-Playlist container">
         <div className="columns">
@@ -151,9 +152,9 @@ class PlaylistContainer extends Component {
                     <div className="level-right">
                       <div className="level-item">
                         {
-                          selectedCategory.list ? null : <span>or&nbsp;</span>
+                          selectedCategory.list ? null : <span>{translate('or')}&nbsp;</span>
                         }
-                        <a className="button" onClick={this.showNewSpeechForm}>Add a speech</a>
+                        <a className="button" onClick={this.showNewSpeechForm}>{translate('add-new-speech')}</a>
                       </div>
                     </div>
                   </div>
@@ -182,9 +183,9 @@ class PlaylistContainer extends Component {
           selectedCategory.value === 'mySpeeches' && !selectedSpeech.trialId ?
             <div className="columns is-centered">
               <div className="column is-one-quarter has-text-centered notification">
-                <span>
-                  You didn't select a trial as the reference, pick one in <a onClick={this.activateTab} className="has-text-primary">Trials</a>.
-                </span>
+                {translate('speech-message')}&nbsp;
+                <a onClick={this.activateTab} className="has-text-primary">{translate('trials')}
+                </a>.
               </div>
             </div> : null
         }

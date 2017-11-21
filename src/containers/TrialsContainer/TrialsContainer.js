@@ -93,6 +93,8 @@ class TrialsContainer extends Component {
   render() {
     const {trials, selectedSpeech, selectedCategory} = this.props;
     const {trialItems} = this.state;
+    const translate = this.context.t;
+
     const filteredTrialItems = trialItems.filter((item) => {
               return item.refSpeech === selectedSpeech.label;
             });
@@ -103,7 +105,9 @@ class TrialsContainer extends Component {
             <div className="container">
               <div className="columns is-centered">
                 <div className="column is-one-quarter has-text-centered notification">
-                  You don't have any trials, please make a <a onClick={this.activateTab} className="has-text-primary">Recording</a> first.
+                  {translate('trials-message-one')}&nbsp;
+                  <a onClick={this.activateTab} className="has-text-primary">{translate('recording')}
+                  </a>&nbsp;{translate('trials-message-two')}
                 </div>
               </div>
             </div> : null

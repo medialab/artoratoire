@@ -1,6 +1,6 @@
 [
   {
-    "label": "Francais",
+    "label": "french",
     "value": "fr",
     "list": [
       {
@@ -71,7 +71,7 @@
     ]
   },
   {
-    "label": "English",
+    "label": "english",
     "value": "en",
     "list": [
       {

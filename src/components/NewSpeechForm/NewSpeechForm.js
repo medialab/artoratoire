@@ -36,23 +36,24 @@ class NewSpeechForm extends Component {
   }
   render() {
     const {label, content, lang} = this.state;
+    const translate = this.context.t;
     return (
       <form className="aort-Form" onSubmit={this.handleSubmit}>
         <div className="field">
-          <label className="label">Speech Title</label>
+          <label className="label">{translate('speech-title')}</label>
           <div className="control">
             <input type="text" className="input" name="label" value={label} onChange={this.handleChange} />
           </div>
         </div>
         <div className="field">
-          <label className="label">Speech Content</label>
+          <label className="label">{translate('speech-content')}</label>
           <div className="control">
             <textarea className="textarea" name="content" value={content} onChange={this.handleChange}></textarea>
           </div>
         </div>
         <div className="field">
           <div className="control">
-            <label className="label">Languange of the Speech</label>
+            <label className="label">{translate('speech-lang')}</label>
             <select value={lang} name="lang" onChange={this.handleChange}>
               <option value="en">en</option>
               <option value="fr">fr</option>
@@ -63,10 +64,10 @@ class NewSpeechForm extends Component {
           <div className="level-right">
             <div className="field is-grouped">
               <div className="control">
-                <button className="button" onClick={this.handleCancel}>Cancel</button>
+                <button className="button" onClick={this.handleCancel}>{translate('cancel')}</button>
               </div>
               <div className="control">
-                <button type="submit" className="button is-primary">Save</button>
+                <button type="submit" className="button is-primary">{translate('save')}</button>
               </div>
             </div>
           </div>

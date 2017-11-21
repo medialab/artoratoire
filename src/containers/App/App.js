@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {setLanguage} from 'redux-i18n';
@@ -31,6 +32,7 @@ class App extends Component {
 
   render() {
     const {lang, selectedSpeech, actions} = this.props;
+    const translate = this.context.t;
     return (
       <div className="aort-App">
         <NavBar lang={lang} setLanguage={actions.setLanguage} />
@@ -48,10 +50,10 @@ class App extends Component {
                   <div className="tabs is-fullwidth">
                     <TabList>
                       <Tab selectedClassName="is-active">
-                        <a>Recording</a>
+                        <a>{translate('recording')}</a>
                       </Tab>
                       <Tab selectedClassName="is-active">
-                        <a>Trials</a>
+                        <a>{translate('trials')}</a>
                       </Tab>
                     </TabList>
                   </div>
@@ -70,6 +72,10 @@ class App extends Component {
     );
   }
 }
+
+App.contextTypes = {
+  t: PropTypes.func.isRequired
+};
 
 export default connect(
   state => ({

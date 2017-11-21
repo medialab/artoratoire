@@ -103,6 +103,7 @@ class PlaybackItems extends Component {
   render() {
     const {items, selectedItem, selectedSpeech, category, type, showWave} = this.props;
     const {isPlaying, isEnded} = this.state;
+    const translate = this.context.t;
     return (
       <div className="aort-PlaybackItems container">
         {
@@ -158,7 +159,7 @@ class PlaybackItems extends Component {
                         </div>
                         <div className="level-item">
                           <div>
-                            <p>{item.label}</p>
+                            <p>{type === 'trials' ? (translate(item.label.split(' ')[0]) + ' ' + item.label.split(' ')[1]) : item.label}</p>
                             <small>{formatedDuration}</small>
                           </div>
                         </div>
@@ -186,11 +187,11 @@ class PlaybackItems extends Component {
                             <div className="level-item buttons has-addons">
                               {
                                 category.value === 'mySpeeches' ?
-                                  <button className={'button ' + (selectedSpeech.trialId === item.id ? 'is-selected is-primary' : '')} disabled={selectedSpeech && item.id === selectedSpeech.id} onClick={handleSelectRef} >Select as reference</button> : null
+                                  <button className={'button ' + (selectedSpeech.trialId === item.id ? 'is-selected is-primary' : '')} disabled={selectedSpeech && item.id === selectedSpeech.id} onClick={handleSelectRef} >{translate('select-reference')}</button> : null
                               }
-                              <button className={'button'} onClick={handleDeleteItem}>Delete</button>
+                              <button className={'button'} onClick={handleDeleteItem}>{translate('delete')}</button>
                               {/*<button className={'button'} disabled={(speech.trialId && speech.trialId === item.id) || (selectedItem && item.id === selectedItem.id)} onClick={onDeleteTrial}>delete</button>*/}
-                              <a href={item.blobURL} onClick={handleDownLoad} download={`${item.label}-${selectedSpeech.label}.mp3`} className="button">Download</a>
+                              <a href={item.blobURL} onClick={handleDownLoad} download={`${item.label}-${selectedSpeech.label}.mp3`} className="button">{translate('download')}</a>
                             </div>
                           </div>
                         </div> : null

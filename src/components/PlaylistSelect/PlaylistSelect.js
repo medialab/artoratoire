@@ -11,8 +11,16 @@ const PlaylistSelect = ({
   options,
   placeholder,
   onChange
-}) => {
+}, context) => {
   const onSelectChange = (e) => onChange(e);
+  const translate = context.t;
+  const translateOptions = options.map(d => {
+    return {
+      label: translate(d.label),
+      value: d.value,
+      list: d.list
+    };
+  });
   return (
     <div className="aort-PlaylistSelect">
       <Select
@@ -20,11 +28,14 @@ const PlaylistSelect = ({
         value={selectedOption}
         openOnFocus
         clearable={false}
-        options={options}
+        options={translateOptions}
         placeholder={placeholder}
         onChange={onSelectChange} />
     </div>
   );
+};
+PlaylistSelect.contextTypes = {
+  t: PropTypes.func.isRequired
 };
 
 PlaylistSelect.propTypes = {

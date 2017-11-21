@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './SpeechContent.scss';
 
-const SpeechContent = ({speech}) => {
+const SpeechContent = ({speech}, context) => {
+  const translate = context.t;
   const syllablesTotal = speech.syllables
                         .map((d) => d.count)
                         .reduce((a, b) => a + b, 0);
-
   return (
     <div className="aort-SpeechContent content">
       {speech.content ?
@@ -18,8 +18,8 @@ const SpeechContent = ({speech}) => {
                 <table className="table is-narrow">
                   <thead>
                     <tr>
-                      <th>Word</th>
-                      <th>Syllables</th>
+                      <th>{translate('words')}</th>
+                      <th>{translate('syllables')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -39,6 +39,10 @@ const SpeechContent = ({speech}) => {
       : null}
     </div>
   );
+};
+
+SpeechContent.contextTypes = {
+  t: PropTypes.func.isRequired
 };
 
 SpeechContent.propTypes = {

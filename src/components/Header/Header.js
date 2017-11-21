@@ -27,7 +27,7 @@ const Header = ({lang, setLanguage}, context) => {
           </div>
           <div className="link-down has-text-centered">
             <Scrollchor to="#main" className="button is-white has-text-primary">
-              <span>Start Playing</span>
+              <span>{translate('link-down')}</span>
               <br />
               <span className="icon">
                 <i className="fa fa-long-arrow-down"></i>

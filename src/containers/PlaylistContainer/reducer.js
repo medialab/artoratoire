@@ -5,7 +5,7 @@ const initialPlaylistState = {
   selectedSpeech: {},
   showSpeechWave: true,
   userSpeeches: {
-    label: 'My Speeches',
+    label: 'my-speeches',
     value: 'mySpeeches',
     list: []
   }
