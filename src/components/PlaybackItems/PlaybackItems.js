@@ -6,7 +6,7 @@ import PlaybackWave from '../PlaybackWave/PlaybackWave';
 import SilenceRatio from '../../components/SilenceRatio/SilenceRatio';
 import durationFormat from '../../utils/durationFormat';
 import {BAR_WIDTH, BAR_GUTTER} from '../../constants/CanvasConstants';
-import {SAMPLE_RATE} from '../../constants/AudioConstants';
+import {SEC_BUFFER, SAMPLE_RATE} from '../../constants/AudioConstants';
 
 class PlaybackItems extends Component {
   constructor(props) {
@@ -63,7 +63,7 @@ class PlaybackItems extends Component {
     const {selectedItem, type, showWave} = this.props;
     if (!this.state.isScrolling && (showWave || type === 'trials')) {
 
-      const currentBars = Math.ceil(currentTime * 48000 / SAMPLE_RATE);
+      const currentBars = Math.ceil(currentTime * SEC_BUFFER / SAMPLE_RATE);
       const progressWidth = currentBars * (BAR_WIDTH + BAR_GUTTER);
       const offsetWidth = this.container.offsetWidth;
       const canvasWidth = Math.ceil((selectedItem.speechData.length) * (BAR_WIDTH + BAR_GUTTER));

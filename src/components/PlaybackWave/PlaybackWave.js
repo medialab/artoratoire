@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import './PlaybackWave.scss';
 
-import {SAMPLE_RATE, THRESHOLD} from '../../constants/AudioConstants';
+import {SEC_BUFFER, SAMPLE_RATE, THRESHOLD} from '../../constants/AudioConstants';
 import {BAR_WIDTH, BAR_GUTTER, CANVAS_HEIGHT, BACKGROUND_COLOR, STROKE_COLOR, SPEAKING_COLOR, SHORT_SILENCE_COLOR, LONG_SILENCE_COLOR} from '../../constants/CanvasConstants';
 
 export default class PlaybackWave extends Component {
@@ -52,7 +52,6 @@ export default class PlaybackWave extends Component {
 
     canvasCtx.fillStyle = backgroundColor;
     canvasCtx.fillRect(0, 0, width, height);
-
     data.forEach((d, i) => {
       if (d.label === 'speaking') {
         canvasCtx.fillStyle = strokeColor;
@@ -66,7 +65,7 @@ export default class PlaybackWave extends Component {
     const {speakingColor, shortSilenceColor, longSilenceColor, data, barWidth, barGutter, onTimeProgress, isPlaying} = this.props;
     // const data = getSpeechData(buffer.getChannelData(0));
     const step = SAMPLE_RATE;
-    const currentBars = Math.ceil(this.audio.currentTime * 48000 / step);
+    const currentBars = Math.ceil(this.audio.currentTime * SEC_BUFFER / step);
     const canvas = this.canvas;
     const canvasCtx = canvas.getContext('2d');
     const halfHeight = canvas.offsetHeight / 2;
